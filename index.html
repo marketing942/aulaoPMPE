@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+  <!-- Google Tag Manager (mesmo container das demais landings do CPPEM).
+       Precisa ser o primeiro script do <head> — é ele que carrega a PixelX. -->
+  <script>(function(w,d,s,l){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'?l='+l:'';j.async=true;j.src=
+  'https://sgtm.cppem.com.br/metrics/'+dl;f.parentNode.insertBefore(j,f);})
+  (window,document,'script','dataLayer');</script>
+  <!-- End Google Tag Manager -->
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aulão PMPE — 18/10 no Teatro Difusora | CPPEM</title>
+<meta name="description" content="Aulão presencial do CPPEM para a PMPE: 18 de outubro, das 08h às 18h, no Teatro Difusora. Vários professores, o conteúdo que cai na prova e resolução de questões no estilo da banca. Cerca de 400 lugares.">
+
+<link rel="icon" href="public/favicon.ico" sizes="48x48">
+<link rel="icon" href="public/favicon-192.png" type="image/png" sizes="192x192">
+<link rel="icon" href="public/favicon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="public/favicon-192.png">
+
+<!-- Open Graph: sem estas tags, WhatsApp e Instagram montam o preview por conta
+     própria — sem imagem e com o texto que encontrarem.
+     ⚠️ Falta: og:url (domínio final) e public/og-aulao-pmpe.jpg (1200×630). -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CPPEM Concursos Públicos">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Aulão PMPE — 18/10 no Teatro Difusora">
+<meta property="og:description" content="Um dia inteiro de aulão presencial para a PMPE, com vários professores e o conteúdo que cai na prova. Cerca de 400 lugares.">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- ⚠️ JSON-LD (schema.org/Event) entra quando houver preço e link de venda:
+     o Google compara o "offers" com o checkout, e um Event sem oferta real
+     não ganha o destaque de evento na busca. -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700;800&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<!-- O brasão é o protagonista da entrada da hero: sem o preload ele só começa
+     a baixar depois do CSS e o carimbo bate num medalhão vazio. -->
+<link rel="preload" as="image" href="public/brasao-pmpe.webp">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://sgtm.cppem.com.br/metrics/ns.html"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- Camadas globais da página -->
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="brasas" id="brasas" aria-hidden="true"></div>
+
+<!-- ================= HEADER ================= -->
+<header class="header" id="header">
+  <div class="header__inner">
+    <a class="brand" href="#topo" aria-label="CPPEM — início">
+      <span class="brand__leao">
+        <img src="public/emblema-leao.webp" alt="CPPEM Concursos Públicos" width="400" height="465">
+      </span>
+      <span class="brand__nome">CPPEM<i>Concursos Públicos</i></span>
+    </a>
+
+    <nav class="nav" aria-label="Seções da página">
+      <a href="#conteudo">Conteúdo</a>
+      <a href="#onde">Onde e quando</a>
+      <a href="#ingressos">Ingressos</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
+
+    <span class="opsel">
+      <i aria-hidden="true"></i>
+      <b>Aulão PMPE</b>
+      <span>18/10</span>
+    </span>
+
+    <a class="btn btn--gold shine" data-cta href="#ingressos">
+      <span>Garantir vaga</span>
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- =========================================================
+     HERO
+     ---------------------------------------------------------
+     A entrada com movimento: o brasão da PMPE cai no medalhão como um
+     carimbo — clarão, onda hexagonal e faíscas saindo da batida — e o resto
+     da hero entra em cascata depois do impacto. Os tempos moram em
+     --impacto no .hero (styles.css); o script só solta as faíscas.
+     ========================================================= -->
+<section class="hero" id="topo">
+  <div class="hero__bg" id="heroBg" aria-hidden="true"><i></i></div>
+  <div class="hero__veil" aria-hidden="true"></div>
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="hero__scan" aria-hidden="true"></div>
+  <div class="hero__dawn" aria-hidden="true"></div>
+  <div class="sparks" id="sparks" aria-hidden="true"></div>
+  <div class="hero__cacos" id="heroCacos" aria-hidden="true"></div>
+
+  <div class="container hero__inner">
+    <span class="tag anim d1">
+      <i class="dot" aria-hidden="true"></i>
+      <span>18 de outubro · Teatro Difusora · 08h às 18h</span>
+    </span>
+
+    <h1 class="hero__title anim d2">
+      <span class="hero__desig">Aulão</span>
+      <span class="luz">PMPE</span>
+    </h1>
+
+    <div class="selo selo--carimbo" id="seloHero">
+      <span class="selo__aro" aria-hidden="true"></span>
+      <span class="selo__core">
+        <img src="public/brasao-pmpe.webp" alt="Brasão da Polícia Militar de Pernambuco" width="357" height="419">
+      </span>
+      <i class="selo__clarao" aria-hidden="true"></i>
+      <i class="selo__onda" aria-hidden="true"></i>
+      <i class="selo__onda selo__onda--2" aria-hidden="true"></i>
+    </div>
+
+    <p class="hero__sub anim d4">
+      Um dia inteiro, vários professores e o conteúdo que cai na prova da
+      Polícia Militar de Pernambuco — num só lugar.
+    </p>
+
+    <div class="hero__cta anim d5">
+      <a class="btn btn--gold btn--lg shine" data-cta href="#ingressos">
+        <span>Quero minha vaga</span>
+      </a>
+      <a class="btn btn--ghost btn--lg" href="#conteudo"><span>Ver o conteúdo</span></a>
+    </div>
+
+    <!-- Some sozinho quando o aulão começa (script.js). -->
+    <div class="hero__relogio anim d5" data-relogio-bloco>
+      <em>Começa em</em>
+      <div class="relogio" data-relogio>
+        <span><b data-cd="d">00</b><small>dias</small></span>
+        <span><b data-cd="h">00</b><small>horas</small></span>
+        <span><b data-cd="m">00</b><small>min</small></span>
+        <span><b data-cd="s">00</b><small>seg</small></span>
+      </div>
+    </div>
+
+    <div class="ficha anim d5">
+      <div class="ficha__item"><b>18/10</b><span>Domingo</span></div>
+      <div class="ficha__item"><b>1 DIA</b><span>De imersão</span></div>
+      <div class="ficha__item"><b>08H–18H</b><span>Um dia inteiro</span></div>
+      <div class="ficha__item"><b>400</b><span>Lugares no teatro</span></div>
+    </div>
+  </div>
+
+  <div class="scroller" aria-hidden="true"><i></i></div>
+</section>
+
+<!-- ================= FAIXA CORRIDA ================= -->
+<div class="strip" aria-hidden="true">
+  <div class="strip__track">
+    <span>Teatro Difusora</span><span>18 de outubro</span><span>Vários professores</span><span>O conteúdo que cai</span><span>Resolução de questões</span><span>Um dia de imersão</span>
+    <span>Teatro Difusora</span><span>18 de outubro</span><span>Vários professores</span><span>O conteúdo que cai</span><span>Resolução de questões</span><span>Um dia de imersão</span>
+  </div>
+</div>
+
+<!-- ================= O FORMATO ================= -->
+<section class="section" id="formato" aria-labelledby="formato-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">O formato</span>
+      <h2 class="section__title" id="formato-title">Um dia. Um time inteiro. <span class="gold">Só o que cai.</span></h2>
+      <p class="section__lead">
+        O <strong>Aulão PMPE</strong> não é mais uma aula solta. É um dia inteiro de imersão,
+        presencial, com vários professores e o conteúdo que a prova da Polícia Militar
+        de Pernambuco cobra.
+      </p>
+    </div>
+
+    <div class="pilares">
+      <div class="pilar">
+        <span class="pilar__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <h3>Um dia inteiro</h3>
+        <p>Das 08h às 18h, em cima do conteúdo que cai na prova, sem enrolação.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16.5" cy="9" r="2.5"/><path d="M2.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><path d="M14 14.3c.8-.5 1.6-.8 2.5-.8 2.3 0 4.2 1.6 4.8 4.5"/></svg>
+        </span>
+        <h3>Vários professores</h3>
+        <p>O time do CPPEM no palco, cada um no que domina.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 3h11l3 3v15H5z"/><path d="M8.5 10.5l1.8 1.8 3.4-3.4"/><path d="M8.5 16h7"/></svg>
+        </span>
+        <h3>Resolução de questões</h3>
+        <p>Teoria direto ao ponto e questão na sequência, no estilo da banca.</p>
+      </div>
+      <div class="pilar">
+        <span class="pilar__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 20h18M5 20V10M19 20V10M3 10l9-6 9 6"/><path d="M9 20v-5h6v5"/></svg>
+        </span>
+        <h3>No Teatro Difusora</h3>
+        <p>Cerca de 400 lugares, perto do professor. Dúvida tirada na hora, foco do começo ao fim.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     O CONTEÚDO — as matérias da prova
+     ---------------------------------------------------------
+     Só as MATÉRIAS, de propósito: sem tópicos, sem horário por aula e sem
+     ordem. A divisão das aulas ainda não está fechada, e a página não
+     promete o que a coordenação pode precisar ajustar no dia.
+
+     Quando a programação estiver confirmada, ela pode voltar como uma
+     grade — mas só com o que for certo.
+     ⚠️ Confira a lista de matérias com a coordenação.
+     ========================================================= -->
+<section class="section section--alt" id="conteudo" aria-labelledby="cont-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">O conteúdo</span>
+      <h2 class="section__title" id="cont-title">O que cai na prova <span class="gold">é o que entra no aulão</span></h2>
+      <p class="section__lead">
+        Um dia inteiro em cima das matérias cobradas na prova da <strong>PMPE</strong>,
+        com vários professores do time do CPPEM e questão resolvida no estilo da banca.
+      </p>
+    </div>
+
+    <div class="materias">
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 5h6a3 3 0 0 1 3 3v12a2.5 2.5 0 0 0-2.5-2.5H3z"/><path d="M21 5h-6a3 3 0 0 0-3 3v12a2.5 2.5 0 0 1 2.5-2.5H21z"/></svg></span><b>Língua Portuguesa</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M8 7h8M8 12h2M14 12h2M8 16h2M14 16h2"/></svg></span><b>Matemática e Raciocínio Lógico</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1"/><path d="M8 20h8M12 16v4"/></svg></span><b>Noções de Informática</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M7 21h10M5 7h14"/><path d="M5 7l-3 6a3 3 0 0 0 6 0zM19 7l-3 6a3 3 0 0 0 6 0z"/></svg></span><b>Direito Constitucional</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span><b>Direitos Humanos</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14.5 3.5l6 6M10.5 7.5l6 6M13 5l-4 4 6 6 4-4"/><path d="M10 12l-7 7 2 2 7-7"/></svg></span><b>Direito Penal e Penal Militar</b></div>
+      <div class="materia"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.2-2.9 7.6-7 9-4.1-1.4-7-4.8-7-9V6z"/><path d="M9.3 11.8l1.9 1.9 3.6-3.6"/></svg></span><b>Legislação da PMPE</b></div>
+      <div class="materia materia--nota"><span class="tema__ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span><b>Divisão das aulas</b><small>Ordem, horários e professores divulgados pela coordenação.</small></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ONDE E QUANDO ================= -->
+<section class="section" id="onde" aria-labelledby="onde-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Onde e quando</span>
+      <h2 class="section__title" id="onde-title">Anote na <span class="gold">agenda</span></h2>
+    </div>
+
+    <div class="ficha-evento">
+      <div class="info">
+        <span class="info__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="1"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        </span>
+        <span class="info__cab">Data</span>
+        <b class="info__val">18 de outubro</b>
+        <span class="info__sub">Domingo · 2026</span>
+      </div>
+      <div class="info">
+        <span class="info__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <span class="info__cab">Horário</span>
+        <b class="info__val">08h às 18h</b>
+        <span class="info__sub">Manhã 08h–12h · almoço · tarde 13h–18h</span>
+      </div>
+      <div class="info">
+        <span class="info__ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        </span>
+        <span class="info__cab">Local</span>
+        <b class="info__val">Teatro Difusora</b>
+        <span class="info__sub">Caruaru – PE · cerca de 400 lugares</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     INGRESSOS
+     ---------------------------------------------------------
+     Três lotes de ingresso comum (o valor sobe a cada virada) e um lote
+     único de VIP. Modelo herdado da Operação Alvorada:
+       · VIP     → Camisa oficial + Dog Tag especial (dupla) INCLUSAS
+       · Comum   → Dog Tag comum (+R$ 20,00) e Camisa (+R$ 69,90) à parte
+
+     ⚠️ Preços, lote aberto e links de checkout moram no CONFIG do script.js.
+     Preço vazio = "Em breve". Link vazio = aviso "inscrições abrem em breve".
+     ========================================================= -->
+<section class="section section--alt" id="ingressos" aria-labelledby="ing-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Ingressos</span>
+      <h2 class="section__title" id="ing-title">Cerca de 400 lugares. <span class="gold">Escolha o seu.</span></h2>
+      <p class="section__lead">
+        São três lotes de ingresso comum — o valor sobe a cada virada — e um lote
+        único de <strong>VIP</strong>, que já vem com a Camisa oficial e a Dog Tag especial.
+      </p>
+    </div>
+
+    <!-- A trilha dos lotes. Estado e preços são escritos pelo script.js. -->
+    <ol class="lotes" aria-label="Lotes de ingresso">
+      <li class="lotes__item" data-lote="1">
+        <span class="lotes__n">01</span>
+        <b>1º lote</b>
+        <span class="lotes__preco" data-lote-preco>Em breve</span>
+        <span class="lotes__status" data-lote-status>Abre em breve</span>
+      </li>
+      <li class="lotes__item" data-lote="2">
+        <span class="lotes__n">02</span>
+        <b>2º lote</b>
+        <span class="lotes__preco" data-lote-preco>Em breve</span>
+        <span class="lotes__status" data-lote-status>Próximo</span>
+      </li>
+      <li class="lotes__item" data-lote="3">
+        <span class="lotes__n">03</span>
+        <b>3º lote</b>
+        <span class="lotes__preco" data-lote-preco>Em breve</span>
+        <span class="lotes__status" data-lote-status>Último comum</span>
+      </li>
+      <li class="lotes__item lotes__item--vip" data-lote="vip">
+        <span class="lotes__n">VIP</span>
+        <b>Lote único</b>
+        <span class="lotes__preco" data-lote-preco>Em breve</span>
+        <span class="lotes__status">Não repete</span>
+      </li>
+    </ol>
+
+    <div class="planos">
+      <!-- ---------- COMUM ---------- -->
+      <article class="plano">
+        <header class="plano__head">
+          <span class="plano__tag" data-ingresso-lote>1º lote</span>
+          <h3 class="plano__nome">Ingresso Comum</h3>
+          <p class="plano__desc">Seu lugar no Teatro Difusora e o aulão inteiro, das 08h às 18h.</p>
+        </header>
+        <ul class="plano__lista">
+          <li>Acesso ao aulão completo, das 08h às 18h</li>
+          <li>Vários professores e o conteúdo que cai na prova</li>
+          <li>Resolução de questões no estilo da banca</li>
+          <li>Seu lugar na plateia do Teatro Difusora</li>
+          <li class="plano__addon"><span>Por mais <b>R$ 20,00</b>, leve a <b>Dog Tag comum</b></span></li>
+          <li class="plano__addon"><span>Por mais <b>R$ 69,90</b>, leve a <b>Camisa oficial</b></span></li>
+        </ul>
+        <div class="plano__rodape">
+          <div class="plano__preco">
+            <span class="plano__preco-label" data-ingresso-label>Ingresso no 1º lote</span>
+            <b data-ingresso-preco="comum">Em breve</b>
+            <span class="plano__preco-nota">O valor sobe no próximo lote</span>
+          </div>
+          <a class="btn btn--ghost btn--lg btn--block" data-compra="comum" href="#ingressos">
+            <span>Quero o comum</span>
+          </a>
+        </div>
+      </article>
+
+      <!-- ---------- VIP ---------- -->
+      <article class="plano plano--vip">
+        <i class="plano__brasao" aria-hidden="true"></i>
+        <span class="plano__selo">Mais completo</span>
+        <header class="plano__head">
+          <span class="plano__tag">Lote único · vagas limitadas</span>
+          <h3 class="plano__nome">Ingresso VIP</h3>
+          <p class="plano__desc">Tudo do comum, com a Camisa oficial e a Dog Tag especial já inclusas.</p>
+        </header>
+        <ul class="plano__lista">
+          <li class="plano__tudo">Tudo do Ingresso Comum</li>
+          <li><b>Camisa oficial</b> do Aulão PMPE inclusa</li>
+          <li class="plano__vipitem">Dog Tag especial dupla garantida</li>
+        </ul>
+        <div class="plano__rodape">
+          <div class="plano__preco">
+            <span class="plano__preco-label">Ingresso VIP · lote único</span>
+            <b data-ingresso-preco="vip">Em breve</b>
+            <span class="plano__preco-nota">Um lote só — não repete</span>
+          </div>
+          <a class="btn btn--gold btn--lg btn--block shine" data-compra="vip" href="#ingressos">
+            <span>Quero o VIP</span>
+          </a>
+        </div>
+      </article>
+    </div>
+
+    <!-- ─── CAMISA E DOG TAG ───
+         ⚠️ Sem foto ainda: as artes abaixo são ilustrações em SVG. Quando as
+         imagens chegarem, troque cada <svg> por
+         <img src="public/NOME.webp" alt="..." width="..." height="..." loading="lazy">
+         dentro do mesmo <figure class="adicional__arte">. -->
+    <div class="adicionais">
+      <div class="adicionais__head">
+        <span class="eyebrow">Camisa e Dog Tag</span>
+        <h3>Leve o aulão <span class="gold">com você</span></h3>
+        <p>No VIP, os dois já vêm inclusos. No comum, você adiciona o que quiser.</p>
+      </div>
+
+      <div class="adicionais__grid">
+        <article class="adicional">
+          <figure class="adicional__arte">
+            <svg viewBox="0 0 220 170" role="img" aria-label="Ilustração da Dog Tag do Aulão PMPE">
+              <defs>
+                <linearGradient id="dtMetal" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#F0DCB0"/><stop offset=".35" stop-color="#C9AE7A"/>
+                  <stop offset=".7" stop-color="#8A7040"/><stop offset="1" stop-color="#C9AE7A"/>
+                </linearGradient>
+                <linearGradient id="dtMetal2" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#8A7040"/><stop offset=".5" stop-color="#5E4B29"/><stop offset="1" stop-color="#8A7040"/>
+                </linearGradient>
+              </defs>
+              <path class="adicional__corrente" d="M40 8 C 70 70, 150 70, 180 8"/>
+              <g transform="rotate(-12 96 104)">
+                <rect x="62" y="52" width="68" height="104" rx="22" fill="url(#dtMetal2)"/>
+                <circle cx="96" cy="66" r="5" fill="#0A0A0B"/>
+              </g>
+              <g transform="rotate(8 126 100)">
+                <rect x="92" y="46" width="68" height="104" rx="22" fill="url(#dtMetal)"/>
+                <rect x="97" y="51" width="58" height="94" rx="18" fill="none" stroke="#5E4B29" stroke-opacity=".5"/>
+                <circle cx="126" cy="60" r="5" fill="#0A0A0B"/>
+                <text x="126" y="90" text-anchor="middle" class="adicional__grav">AULÃO</text>
+                <text x="126" y="112" text-anchor="middle" class="adicional__grav adicional__grav--g">PMPE</text>
+                <text x="126" y="132" text-anchor="middle" class="adicional__grav adicional__grav--p">18.10.2026</text>
+              </g>
+            </svg>
+          </figure>
+          <div class="adicional__txt">
+            <h4>Dog Tag do Aulão</h4>
+            <p>A placa de identificação da tropa, com o nome do aulão e a data gravados.</p>
+            <ul class="adicional__opcoes">
+              <li><span>Especial dupla · VIP</span><b class="adicional__inclusa">Inclusa</b></li>
+              <li><span>Comum · avulsa</span><b>+ R$ 20,00</b></li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="adicional">
+          <figure class="adicional__arte">
+            <svg viewBox="0 0 220 170" role="img" aria-label="Ilustração da Camisa oficial do Aulão PMPE">
+              <path class="adicional__camisa" d="M78 14 L96 8 Q110 24 124 8 L142 14 L184 44 L164 72 L150 62 L150 162 L70 162 L70 62 L56 72 L36 44 Z"/>
+              <path d="M96 8 Q110 24 124 8" fill="none" stroke="#AF9256" stroke-width="2"/>
+              <image href="public/emblema-leao.webp" x="92" y="52" width="36" height="42" opacity=".95"/>
+              <text x="110" y="116" text-anchor="middle" class="adicional__grav adicional__grav--claro">AULÃO</text>
+              <text x="110" y="136" text-anchor="middle" class="adicional__grav adicional__grav--g">PMPE</text>
+            </svg>
+          </figure>
+          <div class="adicional__txt">
+            <h4>Camisa oficial</h4>
+            <p>Preta com detalhes em ouro e o leão do CPPEM no peito — a farda do aulão.</p>
+            <ul class="adicional__opcoes">
+              <li><span>No VIP</span><b class="adicional__inclusa">Inclusa</b></li>
+              <li><span>Com o comum</span><b>+ R$ 69,90</b></li>
+            </ul>
+          </div>
+        </article>
+      </div>
+
+      <p class="adicionais__nota">Imagens ilustrativas — as fotos oficiais da Camisa e da Dog Tag chegam em breve.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section" id="faq" aria-labelledby="faq-title">
+  <div class="container">
+    <div class="section__head">
+      <span class="eyebrow">Antes de decidir</span>
+      <h2 class="section__title" id="faq-title">Dúvidas <span class="gold">frequentes</span></h2>
+    </div>
+
+    <div class="faq">
+      <details class="faq__item">
+        <summary>Onde e quando vai ser o aulão?</summary>
+        <p>
+          No <strong>Teatro Difusora</strong>, em Caruaru, no domingo <strong>18 de outubro</strong>,
+          das <strong>08h às 12h</strong> e das <strong>13h às 18h</strong>, com intervalo para o almoço entre os dois turnos.
+        </p>
+      </details>
+      <details class="faq__item">
+        <summary>Qual a diferença entre o ingresso comum e o VIP?</summary>
+        <p>
+          Os dois dão acesso ao <strong>aulão completo</strong>. O VIP já vem com a
+          <strong>Camisa oficial</strong> e a <strong>Dog Tag especial dupla</strong> inclusas, e tem
+          lote único — quando acaba, não abre outro. O comum é vendido em <strong>três lotes</strong>,
+          e o valor sobe a cada virada.
+        </p>
+      </details>
+      <details class="faq__item">
+        <summary>Comprei o comum. Posso levar a Camisa e a Dog Tag?</summary>
+        <p>
+          Pode. Com o ingresso comum, a <strong>Dog Tag comum sai por + R$ 20,00</strong> e a
+          <strong>Camisa oficial por + R$ 69,90</strong>. A Dog Tag especial dupla é exclusiva do VIP.
+        </p>
+      </details>
+      <details class="faq__item">
+        <summary>Ainda estou começando. O aulão serve para mim?</summary>
+        <p>
+          Serve. O aulão é montado em cima do <strong>conteúdo que cai na prova</strong>, então quem está
+          começando sai sabendo onde concentrar o estudo — e quem já estuda sai com revisão e
+          questão resolvida.
+        </p>
+      </details>
+      <details class="faq__item">
+        <summary>Quem são os professores?</summary>
+        <p>
+          <strong>Vários professores do time do CPPEM</strong>. Quem dá cada aula é divulgado pela coordenação.
+        </p>
+      </details>
+      <details class="faq__item">
+        <summary>Como faço a inscrição?</summary>
+        <p>
+          Pelo <strong>checkout oficial do CPPEM</strong>, pelos botões da seção de ingressos. Qualquer
+          dúvida antes de fechar, a equipe atende no <strong>WhatsApp</strong>.
+        </p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="final">
+  <div class="final__marca" aria-hidden="true"></div>
+  <div class="container final__inner">
+    <div class="selo">
+      <span class="selo__aro" aria-hidden="true"></span>
+      <span class="selo__core">
+        <img src="public/brasao-pmpe.webp" alt="" width="357" height="419" loading="lazy">
+      </span>
+    </div>
+
+    <h2>Um dia inteiro.<br>Uma <span class="gold">vantagem</span> que fica.</h2>
+    <p>
+      Enquanto a concorrência estuda sozinha, você passa o domingo no Teatro Difusora com um
+      time de professores focado na prova da <strong>PMPE</strong>.
+    </p>
+
+    <a class="btn btn--gold btn--lg shine" data-cta href="#ingressos">
+      <span>Garantir minha vaga</span>
+    </a>
+    <span class="final__note">18/10 · 08h às 18h · Teatro Difusora</span>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <span class="footer__leao">
+        <img src="public/emblema-leao.webp" alt="CPPEM Concursos Públicos" width="400" height="465" loading="lazy">
+      </span>
+      <p>&ldquo;Seu sonho é o nosso principal objetivo.&rdquo;</p>
+      <div class="footer__social">
+        <a href="https://wa.me/558173105354" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/cppemconcursos/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.3 2.2.4.6.2 1 .5 1.4.9s.7.8.9 1.4c.1.4.3 1 .4 2.2 0 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.8-.4 2.2-.2.6-.5 1-.9 1.4s-.8.7-1.4.9c-.4.1-1 .3-2.2.4-1.3 0-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.3-2.2-.4a3.8 3.8 0 0 1-1.4-.9 3.8 3.8 0 0 1-.9-1.4c-.1-.4-.3-1-.4-2.2 0-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c.1-1.2.3-1.8.4-2.2.2-.6.5-1 .9-1.4s.8-.7 1.4-.9c.4-.1 1-.3 2.2-.4 1.3 0 1.7-.1 4.9-.1zM12 0C8.7 0 8.3 0 7 .1 5.7.1 4.8.3 4.1.6c-.8.3-1.4.7-2 1.4-.7.6-1.1 1.2-1.4 2C.3 4.7.1 5.6.1 6.9 0 8.2 0 8.6 0 12s0 3.8.1 5.1c0 1.3.2 2.2.5 2.9.3.8.7 1.4 1.4 2 .6.7 1.2 1.1 2 1.4.7.3 1.6.5 2.9.5 1.3.1 1.7.1 5.1.1s3.8 0 5.1-.1c1.3 0 2.2-.2 2.9-.5.8-.3 1.4-.7 2-1.4.7-.6 1.1-1.2 1.4-2 .3-.7.5-1.6.5-2.9.1-1.3.1-1.7.1-5.1s0-3.8-.1-5.1c0-1.3-.2-2.2-.5-2.9-.3-.8-.7-1.4-1.4-2-.6-.7-1.2-1.1-2-1.4-.7-.3-1.6-.5-2.9-.5C15.8 0 15.4 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4 6.2 6.2 0 0 0 0-12.4zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-10.4a1.4 1.4 0 1 1-2.9 0 1.4 1.4 0 0 1 2.9 0z"/></svg>
+        </a>
+        <a href="https://www.tiktok.com/@cppemconcursos" target="_blank" rel="noopener" aria-label="TikTok">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.6 5.8a4.3 4.3 0 0 1-1-2.8h-3.3v13.2a2.4 2.4 0 1 1-2.4-2.4c.2 0 .5 0 .7.1v-3.3a5.7 5.7 0 1 0 5 5.7V9.7a7.6 7.6 0 0 0 4.4 1.4V7.8a4.3 4.3 0 0 1-3.4-2z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@cppemconcursos" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.5a3 3 0 0 0-2.1-2.1C19.5 3.9 12 3.9 12 3.9s-7.5 0-9.4.5A3 3 0 0 0 .5 6.5C0 8.4 0 12 0 12s0 3.6.5 5.5a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.5.5-5.5s0-3.6-.5-5.5zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <nav class="footer__col" aria-label="Aulão PMPE">
+      <h4>Aulão PMPE</h4>
+      <a href="#conteudo">Conteúdo</a>
+      <a href="#onde">Onde e quando</a>
+      <a href="#ingressos">Ingressos</a>
+    </nav>
+
+    <nav class="footer__col" aria-label="Cursos">
+      <h4>Cursos</h4>
+      <a href="https://cppem.com.br/turmas" target="_blank" rel="noopener">Turmas</a>
+      <a href="https://unicive.cppem.com.br" target="_blank" rel="noopener">Faculdade EAD</a>
+      <a href="https://loja.cppem.com.br" target="_blank" rel="noopener">Loja</a>
+    </nav>
+
+    <nav class="footer__col" aria-label="Institucional">
+      <h4>Institucional</h4>
+      <a href="https://cppem.com.br/quem-somos" target="_blank" rel="noopener">Quem Somos</a>
+      <a href="https://cppem.com.br/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>
+      <a href="https://cppem.notion.site/vagas" target="_blank" rel="noopener">Trabalhe Conosco</a>
+    </nav>
+  </div>
+
+  <div class="container footer__bar">
+    <span>© <span id="year">2026</span> <strong>Cppem Colégio e Cursos LTDA.</strong> · Caruaru, Pernambuco</span>
+    <span class="footer__cnpj">CNPJ 57.347.872/0001-48</span>
+  </div>
+</footer>
+
+<!-- WhatsApp flutuante -->
+<a class="float" id="whats" href="https://wa.me/558173105354" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+</a>
+
+<!-- Barra fixa (mobile) -->
+<div class="dock" id="dock">
+  <div class="dock__info">
+    <b>Aulão PMPE</b>
+    <span>18/10 · Teatro Difusora</span>
+  </div>
+  <a class="btn btn--gold" data-cta href="#ingressos"><span>Garantir vaga</span></a>
+</div>
+
+<!-- Aviso de inscrição ainda fechada (botão de compra sem link) -->
+<div class="aviso" id="aviso" role="status" aria-live="polite">
+  <i aria-hidden="true"></i>
+  <span>As vendas do <b>Aulão PMPE</b> abrem em breve. Fique de olho nesta página.</span>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

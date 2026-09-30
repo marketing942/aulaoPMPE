@@ -1,0 +1,1431 @@
+/* =========================================================
+   CPPEM · AULÃO PMPE
+   Página de evento presencial — 18/10, Teatro Difusora.
+   ---------------------------------------------------------
+   Sistema visual herdado da venda direta MentoriaPMPEePCPE e
+   da Operação Alvorada: Oxanium + Rajdhani, ouro #AF9256 sobre
+   preto #0A0A0B, fios de 1px em ouro translúcido, cantos
+   chanfrados de operação, grão de impressão e brasas subindo
+   pela viewport.
+
+   Os tokens --op-* (acento, halo, marca d água) são os da
+   PMPE: ember como acento quente, marca-pmpe como textura.
+   ========================================================= */
+
+/* ─── RESET ────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ─── TOKENS ───────────────────────────────────────────── */
+:root {
+  --gold:        #AF9256;
+  --gold-light:  #C9AE7A;
+  --gold-pale:   #F0DCB0;
+  --gold-dark:   #8A7040;
+  --gold-deep:   #5E4B29;
+
+  --bg:   #0A0A0B;
+  --bg-2: #111115;
+  --bg-3: #18181E;
+  --bg-4: #1F1F28;
+
+  --border:        rgba(175,146,86,.18);
+  --border-soft:   rgba(175,146,86,.10);
+  --border-active: rgba(175,146,86,.55);
+
+  --text:      #E8E4D9;
+  --text-dim:  #ADA99B;
+  --text-mute: #87847A;
+
+  --danger: #C25B52;
+  --ok:     #6FA96A;
+
+  /* A assinatura de cor da PMPE. É de SUSSURRO: entra em halos, clarões e
+     fios — nunca em texto corrido ou botão. O sistema continua sendo o ouro. */
+  --ember: #C4703F;
+
+  --font-title: 'Oxanium', system-ui, sans-serif;
+  --font-ui:    'Rajdhani', system-ui, sans-serif;
+
+  --nav-h: 76px;
+  --ease:   cubic-bezier(.4,0,.2,1);
+  --freada: cubic-bezier(.16,1.02,.3,1);
+  --t:      .28s var(--ease);
+
+  --maxw: 1180px;
+
+  --op-accent: var(--ember);
+  --op-halo:   rgba(196,112,63,.30);
+  --op-marca:  url("public/marca-pmpe.webp");
+  --op-brasao: url("public/brasao-pmpe.webp");
+  /* A marca da PMPE entra pela esquerda, cortada pela borda — lê como relevo
+     no papel, não como ilustração. O leão vai para a direita nas seções
+     alternadas, para os dois nunca se empilharem. */
+  --op-marca-x:  -330px;
+  --op-marca-h:  660px;
+  --op-leao-x:   calc(100% + 250px);
+}
+
+/* ─── BASE ─────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 16px);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.65;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* grão fino: dá peso de impressão ao preto chapado. Fica acima do conteúdo
+   (z-index 210) e abaixo de navbar/dock/float — de dentro de uma camada
+   z-index 1 o grão sumiria sob as seções. */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 210; pointer-events: none;
+  opacity: .13; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* height:auto é obrigatório: os <img> carregam width/height para reservar
+   espaço e evitar layout shift, e sem isto o atributo height venceria e
+   esticaria a imagem verticalmente. */
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; }
+strong, b { font-weight: 700; color: var(--text); }
+::selection { background: var(--gold); color: #0B0A08; }
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #0d0d0f; }
+::-webkit-scrollbar-thumb { background: #2a2618; border: 2px solid #0d0d0f; border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-deep); }
+
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* ─── LAYOUT ───────────────────────────────────────────── */
+.container { width: min(100% - 44px, var(--maxw)); margin-inline: auto; }
+.center { text-align: center; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Os dois clarões diagonais existem contra o "preto chapado": sem eles cada
+   seção era um retângulo de #0A0A0B liso e a página lia seca entre um bloco e
+   outro. São largos e fracos de propósito — não se enxerga o degradê,
+   enxerga-se que o fundo tem profundidade. */
+.section {
+  position: relative; padding: 106px 0; z-index: 2;
+  background:
+    radial-gradient(900px 460px at 80% 6%,  var(--op-halo), transparent 68%),
+    radial-gradient(780px 420px at 14% 94%, rgba(175,146,86,.045), transparent 70%);
+}
+.section--alt { background: linear-gradient(180deg, #0C0C0E, #0F0F13 50%, #0C0C0E); }
+
+/* ─── MARCAS D ÁGUA ────────────────────────────────────────
+   A marca da corporação escolhida entra pela direita nas seções planas e o
+   leão do CPPEM pela esquerda nas alternadas. A máscara vertical apaga a
+   marca perto das emendas para uma seção não "costurar" na outra.
+
+   marca-*, e NÃO brasao-*: o brasão oficial é colorido e, mesmo a 6% de
+   opacidade, jogava manchas de cor na direita da seção — a única coisa fora
+   da paleta na página inteira. O arquivo marca-* é o mesmo desenho remapeado
+   para a rampa de ouro, e some no preto como as outras texturas. */
+.section::before, .section--alt::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%, #000 82%, transparent);
+}
+.section::before {
+  background: var(--op-marca) var(--op-marca-x) 50% / auto var(--op-marca-h) no-repeat;
+  opacity: .075;
+}
+/* O leão é um desenho grande e de traço grosso: na mesma opacidade da marca
+   da corporação ele dominava as seções mais vazias. */
+.section--alt::before {
+  background: url("public/emblema-leao.webp") var(--op-leao-x) 50% / auto 620px no-repeat;
+  opacity: .035;
+}
+/* fios de ouro nas duas emendas, num único pseudo */
+.section--alt::after {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent, var(--border-active), transparent) top    / 100% 1px no-repeat,
+    linear-gradient(90deg, transparent, var(--border-active), transparent) bottom / 100% 1px no-repeat;
+}
+.section > .container { position: relative; z-index: 2; }
+
+/* ─── TIPOGRAFIA DE SEÇÃO ──────────────────────────────── */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-size: 11px; font-weight: 700; letter-spacing: 5px;
+  text-transform: uppercase; color: var(--gold);
+}
+.eyebrow::before, .eyebrow::after {
+  content: ''; width: 34px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.eyebrow::after { background: linear-gradient(90deg, var(--gold), transparent); }
+
+.section__head { text-align: center; max-width: 920px; margin: 0 auto 56px; }
+.section__title {
+  font-family: var(--font-title);
+  font-size: clamp(30px, 4.6vw, 52px);
+  font-weight: 800; line-height: 1.04; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text); margin: 16px 0 0;
+}
+.section__title::after {
+  content: ''; display: block; width: 78px; height: 2px; margin: 22px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.section__title--left { font-size: clamp(26px, 3.4vw, 40px); }
+.section__title--left::after { margin-inline: 0; }
+
+.section__lead {
+  max-width: 740px; margin: 22px auto 0; color: var(--text-dim);
+  font-size: 17px; line-height: 1.7;
+}
+.section__lead strong { color: var(--gold-light); }
+
+.gold {
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold) 55%, var(--gold-dark));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+/* ─── BRILHO (shine) ───────────────────────────────────────
+   Pseudo-elemento branco por cima da caixa. Só funciona sobre fundo sólido:
+   em cima de letra vazada leria como um quadrado claro passando por trás. */
+@keyframes shine-sweep {
+  0%   { transform: translateX(-160%) skewX(-22deg); }
+  55%  { transform: translateX(320%)  skewX(-22deg); }
+  100% { transform: translateX(320%)  skewX(-22deg); }
+}
+.shine { position: relative; overflow: hidden; }
+.shine::after {
+  content: ''; position: absolute; top: -60%; left: 0;
+  width: 42%; height: 220%; z-index: 3; pointer-events: none;
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,255,255,.10) 35%,
+    rgba(255,255,255,.55) 50%, rgba(255,255,255,.10) 65%, transparent 100%);
+  animation: shine-sweep 4.6s var(--ease) infinite;
+}
+.shine--slow::after { animation-duration: 6.5s; width: 34%; }
+
+/* ─── BOTÕES ───────────────────────────────────────────── */
+.btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  gap: 12px; height: 52px; padding: 0 30px;
+  font-size: 13.5px; font-weight: 700; letter-spacing: 2.4px;
+  text-transform: uppercase; white-space: nowrap; text-align: center;
+  border: 0; cursor: pointer; overflow: hidden; isolation: isolate;
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+  transition: transform var(--t), filter var(--t), background var(--t), color var(--t);
+}
+.btn > span { position: relative; z-index: 2; }
+.btn:active { transform: translateY(1px) scale(.995); }
+.btn:disabled { cursor: progress; filter: grayscale(.35) brightness(.9); }
+
+.btn--gold {
+  color: #0B0A08;
+  background: linear-gradient(168deg, var(--gold-pale) 0%, var(--gold-light) 22%, var(--gold) 55%, var(--gold-dark) 100%);
+  filter: drop-shadow(0 10px 24px rgba(175,146,86,.30));
+}
+.btn--gold::before {
+  content: ''; position: absolute; inset: 1px; z-index: 1;
+  background: linear-gradient(180deg, rgba(255,255,255,.42), transparent 45%);
+  clip-path: inherit; pointer-events: none;
+}
+.btn--gold:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 16px 32px rgba(175,146,86,.52)) brightness(1.06);
+}
+
+.btn--ghost {
+  color: var(--gold-light);
+  background: rgba(175,146,86,.05);
+  box-shadow: inset 0 0 0 1px var(--border-active);
+}
+.btn--ghost:hover {
+  color: #0B0A08;
+  background: linear-gradient(168deg, var(--gold-light), var(--gold-dark));
+  transform: translateY(-2px);
+}
+
+.btn--lg { height: 62px; padding: 0 44px; font-size: 15px; letter-spacing: 3px; }
+.btn--block { width: 100%; }
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(175,146,86,.16); }
+  50%     { box-shadow: 0 0 0 8px rgba(175,146,86,.03); }
+}
+
+/* ─── keyframes e estilhaços compartilhados ──────────────
+   Vieram do antigo portal de escolha; o aro dos medalhões, o halo e as
+   faíscas do carimbo da hero ainda usam. */
+@keyframes aro-gira { to { transform: rotate(360deg); } }
+@keyframes halo-respira {
+  0%,100% { opacity: .62; transform: scale(1); }
+  50%     { opacity: 1;   transform: scale(1.09); }
+}
+.caco {
+  position: absolute; left: var(--ox); top: var(--oy);
+  width: var(--s); height: var(--s); border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #FFF3D6, var(--cor) 55%, transparent 76%);
+  box-shadow: 0 0 calc(var(--s) * 3) var(--cor);
+  opacity: 0; animation: caco-voa var(--dur) var(--ease) forwards;
+}
+@keyframes caco-voa {
+  0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.3); }
+}
+
+/* =========================================================
+   NAVBAR
+   ========================================================= */
+.progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 0; z-index: 320;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-pale));
+  box-shadow: 0 0 12px rgba(175,146,86,.7);
+}
+
+.header {
+  position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 300;
+  display: flex; align-items: center;
+  background: linear-gradient(180deg, rgba(10,10,11,.72), rgba(10,10,11,.30));
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  transition: height var(--t), background var(--t), box-shadow var(--t);
+}
+.header::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-active) 20%, var(--border-active) 80%, transparent);
+  opacity: .55; transition: opacity var(--t);
+}
+.header.is-stuck {
+  height: 66px; background: rgba(9,9,10,.94);
+  box-shadow: 0 14px 40px -18px rgba(0,0,0,.95);
+}
+.header.is-stuck::after { opacity: 1; }
+
+.header__inner {
+  display: flex; align-items: center; gap: 22px;
+  width: min(100% - 36px, 1320px); margin-inline: auto;
+}
+
+/* A marca é o LEÃO + o nome em Oxanium. O emblema já vem com alfa, então o
+   desenho recortado é o próprio <img> e no lugar do brilho entra um halo de
+   ouro no hover — mask-image com origem .webp não pinta no Chrome. */
+.brand { display: flex; align-items: center; gap: 13px; flex-shrink: 0; }
+.brand__leao { position: relative; display: block; width: 42px; transition: width var(--t); }
+.brand__leao img {
+  width: 100%;
+  filter: drop-shadow(0 2px 8px rgba(175,146,86,.28));
+  transition: filter var(--t);
+}
+.brand:hover .brand__leao img { filter: drop-shadow(0 2px 14px rgba(175,146,86,.65)); }
+.header.is-stuck .brand__leao { width: 36px; }
+.brand__nome {
+  display: flex; flex-direction: column; line-height: 1;
+  font-family: var(--font-title); font-size: 19px; font-weight: 800;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--text);
+}
+.brand__nome i {
+  margin-top: 4px; font-family: var(--font-ui); font-style: normal;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2.6px; color: var(--gold);
+}
+
+.nav { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.nav a {
+  position: relative; padding: 10px 13px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-dim); transition: color var(--t);
+}
+.nav a::after {
+  content: ''; position: absolute; left: 13px; right: 13px; bottom: 4px; height: 1px;
+  background: var(--gold); transform: scaleX(0); transform-origin: left;
+  transition: transform var(--t);
+}
+.nav a:hover { color: var(--gold-light); }
+.nav a:hover::after { transform: scaleX(1); }
+
+/* ─── A PASTILHA DO EVENTO NO HEADER ─── */
+.opsel {
+  display: inline-flex; align-items: center; gap: 10px; margin-left: 14px;
+  height: 40px; padding: 0 14px;
+  background: rgba(175,146,86,.07);
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  white-space: nowrap;
+}
+.opsel > i {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--op-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--op-accent) 18%, transparent);
+  animation: pulse 2.2s infinite; flex-shrink: 0;
+}
+.opsel b {
+  font-family: var(--font-title); font-size: 13px; font-weight: 800;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--gold-light);
+}
+.opsel > span {
+  padding-left: 10px; border-left: 1px solid var(--border);
+  font-family: var(--font-title); font-size: 12px; font-weight: 800;
+  letter-spacing: 1.6px; color: var(--text-dim);
+}
+
+.header .btn { height: 42px; padding: 0 20px; font-size: 11.5px; letter-spacing: 2px; }
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.hero {
+  position: relative; z-index: 2;
+  min-height: 100svh; display: flex; align-items: center;
+  padding: calc(var(--nav-h) + 46px) 0 72px;
+  overflow: hidden; text-align: center;
+}
+.hero__bg { position: absolute; inset: -6% 0 0; will-change: transform; }
+.hero__bg i {
+  position: absolute; inset: 0; display: block;
+  background: url("public/bgatirador.webp") center 30% / cover no-repeat;
+  transform: scale(1.04);
+  opacity: .30;
+  filter: grayscale(.55) contrast(1.06) brightness(.86);
+}
+/* Véu vertical, e não lateral: a hero é centralizada, então escurecer só um
+   dos lados jogaria o texto para fora do eixo de leitura. */
+.hero__veil {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 90% at 50% 42%, rgba(10,10,11,.36) 0%, rgba(10,10,11,.86) 58%, rgba(10,10,11,.97) 100%),
+    linear-gradient(180deg, rgba(10,10,11,.92) 0%, transparent 24%, transparent 62%, var(--bg) 100%);
+}
+.hero__dawn {
+  position: absolute; left: 50%; bottom: -32%; transform: translateX(-50%);
+  width: 130%; height: 60%; pointer-events: none;
+  background: radial-gradient(ellipse at 50% 100%, var(--op-halo), rgba(175,146,86,.06) 42%, transparent 70%);
+}
+.hero__grid {
+  position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image:
+    linear-gradient(rgba(175,146,86,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(175,146,86,.055) 1px, transparent 1px);
+  background-size: 74px 74px;
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 8%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 8%, transparent 70%);
+}
+.hero__scan {
+  position: absolute; inset: 0; pointer-events: none; opacity: .2;
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,.05) 0 1px, transparent 1px 4px);
+}
+.hero__inner { position: relative; z-index: 4; }
+
+.tag {
+  display: inline-flex; align-items: center; gap: 11px;
+  height: 38px; padding: 0 18px; margin-bottom: 24px;
+  background: rgba(175,146,86,.08);
+  box-shadow: inset 0 0 0 1px var(--border-active);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  font-size: 11.5px; font-weight: 700; letter-spacing: 2.6px;
+  text-transform: uppercase; color: var(--gold-light);
+}
+.tag .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); animation: pulse 2.2s infinite; }
+
+.hero__desig {
+  display: block; font-size: clamp(11px, 1.6vw, 14px); font-weight: 700;
+  letter-spacing: clamp(6px, 1.4vw, 12px); text-indent: clamp(6px, 1.4vw, 12px);
+  text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+}
+
+/* ─── A MANCHETE ────────────────────────────────────────────
+   O nome da operação é a manchete, e o brilho que passa por ele NÃO é a
+   varredura de .shine (a dos botões). Aquela é um pseudo branco por cima da
+   caixa: sobre letra vazada leria como um quadrado claro passando por trás.
+
+   Aqui a luz É o preenchimento do texto: duas camadas de fundo recortadas
+   pelo background-clip: text — a rampa de ouro parada embaixo e a lâmina de
+   luz que anda em cima. Fora do desenho das letras não existe pixel para
+   pintar. */
+.hero__title {
+  font-family: var(--font-title);
+  font-size: clamp(38px, 8.4vw, 104px);
+  font-weight: 800; line-height: .94; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text);
+  text-shadow: 0 8px 40px rgba(0,0,0,.75);
+}
+.hero__title .luz {
+  background-image:
+    linear-gradient(100deg, transparent 0%, rgba(255,255,255,.92) 45%, rgba(255,255,255,.92) 55%, transparent 100%),
+    linear-gradient(180deg, var(--gold-pale), var(--gold) 52%, var(--gold-dark));
+  background-size: 55% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: -80% 0, 0 0;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: brilho-letras 5s var(--ease) infinite;
+}
+@keyframes brilho-letras {
+  0%   { background-position: -80% 0, 0 0; }
+  38%  { background-position: 180% 0, 0 0; }
+  100% { background-position: 180% 0, 0 0; }
+}
+
+.hero__sub {
+  max-width: 62ch; margin: 26px auto 0;
+  color: var(--text-dim); font-size: clamp(15.5px, 2vw, 18.5px); line-height: 1.65;
+}
+.hero__sub strong { color: var(--gold-light); }
+
+.hero__cta {
+  display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+  margin-top: 34px;
+}
+.hero__nota {
+  display: block; margin-top: 18px;
+  font-size: 12px; font-weight: 700; letter-spacing: 2.2px;
+  text-transform: uppercase; color: var(--text-mute);
+}
+
+/* ─── O MEDALHÃO DA HERO ────────────────────────────────────
+   Hexágono de ouro com o leão do CPPEM atrás do brasão da
+   corporação: quem prepara e para quem se prepara, na mesma peça.
+
+   O leão fica no ::after do core (e não num <img> irmão) porque ele é
+   textura, não conteúdo: um segundo <img> pediria alt, e "leão do CPPEM
+   desbotado atrás do brasão" não é informação que um leitor de tela precise. */
+.selo {
+  position: relative; width: clamp(150px, 26vw, 250px); aspect-ratio: 1;
+  margin: clamp(26px, 5vh, 44px) auto 0;
+}
+/* O que gira é a LUZ no metal, não o medalhão: o recorte hexagonal fica
+   parado no pai e a rampa cônica gira num filho maior. Girar o próprio
+   recorte desalinha os vértices do aro com os do núcleo a cada quadro. */
+.selo__aro {
+  position: absolute; inset: 0; overflow: hidden;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.selo__aro::before {
+  content: ''; position: absolute; inset: -40%;
+  background: conic-gradient(from 0deg,
+    var(--gold-deep), var(--gold-light) 18%, var(--gold-pale) 26%, var(--gold) 42%,
+    var(--gold-deep) 58%, var(--gold-light) 76%, var(--gold-deep) 100%);
+  animation: aro-gira 20s linear infinite;
+}
+.selo__core {
+  position: absolute; inset: 4px;
+  background: radial-gradient(circle at 50% 34%, #1c1c22, #0a0a0d 74%);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: grid; place-items: center; overflow: hidden;
+}
+.selo__core::before {
+  content: ''; position: absolute; inset: 8%;
+  background: url("public/emblema-leao.webp") center / contain no-repeat;
+  opacity: .1;
+}
+.selo__core img {
+  position: relative; width: 58%; height: 58%; object-fit: contain;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.75));
+}
+.selo::before {
+  content: ''; position: absolute; inset: -26%; z-index: -1;
+  background: radial-gradient(circle, var(--op-halo), transparent 66%);
+  animation: halo-respira 4.2s var(--ease) infinite;
+}
+/* Onda que sai do medalhão a cada ciclo: o "pulso" da operação.
+   A borda é INSET: clip-path recorta também a sombra, e uma box-shadow
+   externa some inteira atrás do próprio recorte — o anel simplesmente não
+   aparece. Por dentro ela vira o contorno do hexágono, que é o que se quer. */
+.selo::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--border-active);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: selo-onda 3.6s var(--ease) infinite;
+}
+@keyframes selo-onda {
+  0%   { opacity: .8; transform: scale(1); }
+  70%  { opacity: 0;  transform: scale(1.28); }
+  100% { opacity: 0;  transform: scale(1.28); }
+}
+
+/* ─── O CARIMBO — a entrada da hero ────────────────────────
+   O medalhão cai de cima, grande e inclinado, e BATE no lugar: um
+   recuo curto (o "quique"), o clarão, duas ondas hexagonais e as
+   faíscas (script.js, no animationend de carimbo-cai). O resto da
+   hero entra em cascata a partir da batida, e não antes dela.
+
+   --impacto é o instante da batida (atraso + duração da queda).
+   Mudou um, muda o outro — senão o clarão acende no vazio. */
+.hero { --cai-atraso: .25s; --cai-dur: .5s; --impacto: .75s; }
+.selo--carimbo {
+  animation:
+    carimbo-cai var(--cai-dur) cubic-bezier(.55,0,.9,.35) var(--cai-atraso) both,
+    carimbo-quica .45s var(--freada) var(--impacto) both;
+}
+@keyframes carimbo-cai {
+  0%   { opacity: 0; transform: translateY(-46vh) rotate(-14deg) scale(1.9); }
+  30%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) rotate(0) scale(1.08); }
+}
+@keyframes carimbo-quica {
+  0%   { transform: scale(1.08); }
+  35%  { transform: scale(.94); }
+  100% { transform: scale(1); }
+}
+.selo__clarao {
+  position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
+  width: 340%; aspect-ratio: 1; opacity: 0;
+  background: radial-gradient(circle, #FFF6DE 0%, rgba(255,231,176,.8) 7%, var(--op-halo) 18%, transparent 46%);
+  transform: translate(-50%, -50%);
+  animation: carimbo-clarao .7s var(--ease) var(--impacto) forwards;
+}
+@keyframes carimbo-clarao {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+  14%  { opacity: 1; transform: translate(-50%, -50%) scale(.5); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+}
+.selo__onda {
+  position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
+  box-shadow: inset 0 0 0 3px var(--gold-pale);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: carimbo-onda .6s cubic-bezier(.12,.7,.3,1) var(--impacto) forwards;
+}
+.selo__onda--2 { animation-delay: calc(var(--impacto) + .1s); animation-duration: .75s; }
+@keyframes carimbo-onda {
+  0%   { opacity: .95; transform: scale(.9); }
+  60%  { opacity: .3; }
+  100% { opacity: 0; transform: scale(2.6); }
+}
+/* o que vem depois do medalhão entra DEPOIS da batida */
+.hero .d4 { animation-delay: calc(var(--impacto) + .1s); }
+.hero .d5 { animation-delay: calc(var(--impacto) + .22s); }
+.hero__cacos { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+
+/* ─── FICHA (números da hero) ──────────────────────────── */
+.ficha {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  max-width: 900px; margin: 46px auto 0;
+  background: var(--border-soft);
+  box-shadow: 0 0 0 1px var(--border-soft);
+}
+.ficha__item { background: rgba(10,10,11,.7); padding: 20px 12px; }
+.ficha__item b {
+  display: block; font-family: var(--font-title);
+  font-size: clamp(22px, 3.2vw, 32px); font-weight: 800; letter-spacing: 1px;
+  color: var(--gold-light); line-height: 1;
+}
+.ficha__item span {
+  display: block; margin-top: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 1.6px;
+  text-transform: uppercase; color: var(--text-mute); line-height: 1.4;
+}
+
+.scroller { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); z-index: 4; }
+.scroller i {
+  position: relative; display: block; width: 22px; height: 34px;
+  box-shadow: inset 0 0 0 1px var(--border-active); border-radius: 12px;
+}
+.scroller i::after {
+  content: ''; position: absolute; left: 50%; top: 7px; transform: translateX(-50%);
+  width: 3px; height: 6px; border-radius: 2px; background: var(--gold);
+  animation: scrolldot 1.9s var(--ease) infinite;
+}
+@keyframes scrolldot { 0%{opacity:0;top:7px} 40%{opacity:1} 80%{opacity:0;top:20px} 100%{opacity:0} }
+
+/* =========================================================
+   FAIXA CORRIDA
+   ========================================================= */
+.strip {
+  position: relative; z-index: 2; overflow: hidden;
+  padding: 15px 0; background: #0C0C0F;
+  border-block: 1px solid var(--border);
+}
+.strip__track {
+  display: flex; width: max-content; gap: 46px;
+  animation: marquee 34s linear infinite;
+}
+.strip__track span {
+  font-family: var(--font-title); font-size: 12.5px; font-weight: 700;
+  letter-spacing: 3.4px; text-transform: uppercase; color: var(--text-mute);
+  display: inline-flex; align-items: center; gap: 46px; white-space: nowrap;
+}
+.strip__track span::after { content: ''; width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ─── QUANDO UM BRASÃO NÃO CARREGA ─────────────────────────
+   O script esconde a <img> e escreve a sigla no lugar dela, dentro do mesmo
+   núcleo. A página nunca mostra imagem quebrada — e o medalhão continua
+   dizendo de que corporação ele é. */
+.selo__sigla {
+  position: relative; font-family: var(--font-title);
+  font-size: clamp(20px, 5vw, 38px); font-weight: 800; letter-spacing: 2px;
+  color: var(--gold-light); text-shadow: 0 2px 12px rgba(0,0,0,.8);
+}
+
+
+/* =========================================================
+   FAQ
+   ========================================================= */
+.faq { max-width: 880px; margin-inline: auto; display: grid; gap: 12px; }
+.faq__item {
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  transition: box-shadow var(--t);
+}
+.faq__item[open] { box-shadow: inset 0 0 0 1px var(--border-active); }
+.faq__item summary {
+  position: relative; list-style: none; cursor: pointer;
+  padding: 22px 62px 22px 26px;
+  font-family: var(--font-title); font-size: 17px; font-weight: 700;
+  letter-spacing: 1px; color: var(--text); transition: color var(--t);
+}
+.faq__item summary::-webkit-details-marker { display: none; }
+.faq__item summary:hover { color: var(--gold-light); }
+.faq__item summary::after {
+  content: '+'; position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
+  font-size: 24px; font-weight: 400; color: var(--gold); transition: transform var(--t);
+}
+.faq__item[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.faq__item p { padding: 0 26px 24px; color: var(--text-dim); font-size: 16px; line-height: 1.7; }
+.faq__item strong { color: var(--gold-light); }
+
+/* =========================================================
+   CTA FINAL
+   ========================================================= */
+.final { position: relative; z-index: 2; padding: 116px 0; overflow: hidden; text-align: center; }
+.final::before {
+  content: ''; position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(900px 520px at 50% 100%, var(--op-halo), transparent 68%),
+    linear-gradient(180deg, var(--bg), #0D0D10);
+}
+.final::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; z-index: 1;
+  background: linear-gradient(90deg, transparent, var(--border-active), transparent);
+}
+.final__marca {
+  position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: .07;
+  background: var(--op-marca) var(--op-marca-x) 50% / auto 620px no-repeat;
+  mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 22%, #000 78%, transparent);
+}
+.final__inner { position: relative; z-index: 3; }
+.final .selo { margin-top: 0; margin-bottom: 34px; }
+.final h2 {
+  font-family: var(--font-title);
+  font-size: clamp(30px, 4.8vw, 54px); font-weight: 800; line-height: 1.04;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text);
+}
+.final p { margin: 22px auto 34px; max-width: 60ch; color: var(--text-dim); font-size: 17px; }
+.final__note {
+  display: block; margin-top: 18px; font-size: 12.5px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase; color: var(--text-mute);
+}
+/* a saída para a outra operação, no fim da página: quem leu tudo e é da outra
+   corporação não pode ter que voltar ao topo para descobrir que ela existe */
+.final__troca {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 30px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-mute); cursor: pointer;
+  border-bottom: 1px solid var(--border-soft); padding-bottom: 3px;
+  transition: color var(--t), border-color var(--t);
+}
+.final__troca:hover { color: var(--gold-light); border-color: var(--border-active); }
+
+/* =========================================================
+   RODAPÉ
+   ========================================================= */
+.footer { position: relative; z-index: 2; background: #08080A; border-top: 1px solid var(--border); padding: 62px 0 0; }
+.footer__inner { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 34px; padding-bottom: 44px; }
+.footer__leao { display: block; width: 74px; }
+.footer__brand p { margin: 18px 0 20px; color: var(--text-dim); font-size: 15px; font-style: italic; max-width: 40ch; line-height: 1.6; }
+.footer__social { display: flex; flex-wrap: wrap; gap: 10px; }
+.footer__social a {
+  width: 38px; height: 38px; display: grid; place-items: center;
+  color: var(--text-dim); box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+  transition: color var(--t), box-shadow var(--t), background var(--t);
+}
+.footer__social a:hover { color: var(--gold); box-shadow: inset 0 0 0 1px var(--border-active); background: rgba(175,146,86,.08); }
+.footer__social svg { width: 17px; height: 17px; fill: currentColor; }
+.footer__col h4 {
+  font-family: var(--font-title); font-size: 13px; font-weight: 800;
+  letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+}
+.footer__col a, .footer__col button {
+  display: block; padding: 6px 0; color: var(--text-dim); font-size: 15px;
+  text-align: left; cursor: pointer; transition: color var(--t);
+}
+.footer__col a:hover, .footer__col button:hover { color: var(--gold-light); }
+.footer__bar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 22px 0 34px; border-top: 1px solid var(--border-soft);
+  font-size: 13.5px; letter-spacing: .6px; color: var(--text-mute);
+}
+.footer__bar strong { color: var(--text-dim); font-weight: 700; }
+.footer__cnpj { letter-spacing: 1.4px; }
+
+/* =========================================================
+   BARRA FIXA (mobile) — 87% do tráfego chega por aqui
+   ---------------------------------------------------------
+   Ela só entra depois da hero: antes disso o próprio CTA da dobra já está na
+   tela e a barra só cobriria conteúdo.
+   ========================================================= */
+.dock {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 280;
+  display: none; align-items: center; gap: 14px;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  background: rgba(9,9,10,.95);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border-active);
+  /* visibility junto do transform: só deslocar deixaria o botão fora da tela
+     ainda alcançável pelo Tab. */
+  transform: translateY(110%); visibility: hidden;
+  transition: transform .35s var(--ease), visibility .35s;
+}
+.dock.is-on { transform: none; visibility: visible; }
+/* As duas linhas nunca quebram: a dock tem altura fixa e um nome de operação
+   em três linhas empurraria o botão para fora dela. O que não couber some no
+   fim da linha, e o botão continua no lugar. */
+.dock__info { flex: 1; min-width: 0; }
+.dock__info b, .dock__info span {
+  display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dock__info b { font-family: var(--font-title); font-size: 13.5px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold-light); }
+.dock__info span { font-size: 11.5px; letter-spacing: 1.4px; color: var(--text-mute); }
+
+/* Botão flutuante do WhatsApp.
+   Entra no mesmo instante que a dock, e não no carregamento: na primeira
+   dobra do celular ele pousa exatamente em cima do CTA secundário da hero,
+   que é largura cheia. Um botão verde tapando metade do "ver tudo que
+   inclui" custa mais do que um atendimento ganho três segundos antes. */
+.float {
+  position: fixed; right: 18px; bottom: 22px; z-index: 290;
+  width: 54px; height: 54px; display: grid; place-items: center;
+  border-radius: 50%; background: #1FA855; color: #fff;
+  box-shadow: 0 12px 30px -8px rgba(31,168,85,.6);
+  /* visibility junto do transform: só encolher deixaria o botão invisível
+     ainda alcançável pelo Tab */
+  opacity: 0; visibility: hidden; transform: scale(.7);
+  transition: transform .3s var(--freada), opacity .3s var(--ease), visibility .3s, box-shadow var(--t);
+}
+.float.is-on { opacity: 1; visibility: visible; transform: none; }
+.float.is-on:hover { transform: scale(1.07); box-shadow: 0 16px 36px -8px rgba(31,168,85,.8); }
+.float svg { width: 27px; height: 27px; fill: currentColor; }
+
+/* =========================================================
+   ANIMAÇÕES DE ENTRADA
+   ========================================================= */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal.is-visible { opacity: 1; transform: none; }
+
+.anim { opacity: 0; transform: translateY(20px); animation: rise .8s var(--ease) forwards; }
+.d1 { animation-delay: .05s } .d2 { animation-delay: .18s } .d3 { animation-delay: .32s }
+.d4 { animation-delay: .46s } .d5 { animation-delay: .6s }
+@keyframes rise { to { opacity: 1; transform: none; } }
+
+/* =========================================================
+   BRASAS — a camada de atmosfera da página inteira
+   ---------------------------------------------------------
+   As brasas sobem pela viewport o tempo todo, independente de onde a pessoa
+   está — é position: fixed, então elas não rolam junto: sobem através do
+   conteúdo como se a página estivesse sobre um braseiro.
+
+   O z-index é 205: ACIMA das seções (que vivem em 2) e logo abaixo do grão do
+   body (210). Embaixo não adiantaria — as seções pintam fundo opaco por cima
+   e as brasas sumiriam. Navbar (300), dock (280) e o WhatsApp (290) ficam por
+   cima, para nenhuma faísca passar na frente de um controle.
+   ========================================================= */
+.brasas { position: fixed; inset: 0; z-index: 205; pointer-events: none; overflow: hidden; }
+.brasas::after {
+  content: ''; position: absolute; left: 50%; bottom: -12%; transform: translateX(-50%);
+  width: 150%; height: 34%;
+  background: radial-gradient(ellipse at 50% 100%, var(--op-halo), rgba(175,146,86,.045) 42%, transparent 72%);
+  opacity: .45;
+}
+.brasa {
+  position: absolute; bottom: -24px; left: var(--x);
+  width: var(--s); height: var(--s); border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #FFEFC9, var(--cor) 52%, transparent 74%);
+  box-shadow: 0 0 calc(var(--s) * 3) calc(var(--s) * .35) var(--cor);
+  opacity: 0;
+  animation: brasa-sobe var(--dur) linear infinite;
+  animation-delay: var(--atraso);
+  will-change: transform, opacity;
+}
+/* O bailado lateral vive nos keyframes, e não numa segunda animação sobre um
+   elemento aninhado: uma brasa é um ponto de luz de 3px, e um único
+   translate3d por passo já entrega a deriva sem dobrar o número de nós. */
+@keyframes brasa-sobe {
+  0%   { opacity: 0;              transform: translate3d(0, 0, 0)          scale(1); }
+  6%   { opacity: var(--op); }
+  25%  {                          transform: translate3d(16px, -26vh, 0)   scale(.94); }
+  50%  {                          transform: translate3d(-12px, -52vh, 0)  scale(.84); }
+  75%  { opacity: calc(var(--op) * .55);
+                                  transform: translate3d(14px, -78vh, 0)   scale(.68); }
+  100% { opacity: 0;              transform: translate3d(-6px, -104vh, 0)  scale(.5); }
+}
+
+/* faíscas douradas da hero */
+.sparks { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.spark {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: var(--gold-light); box-shadow: 0 0 10px 2px rgba(201,174,122,.6);
+  opacity: 0; animation: float linear infinite;
+}
+@keyframes float {
+  0%   { opacity: 0; transform: translateY(0) scale(1); }
+  12%  { opacity: .85; }
+  85%  { opacity: .5; }
+  100% { opacity: 0; transform: translateY(-260px) scale(.5); }
+}
+
+/* =========================================================
+   CONTAGEM REGRESSIVA
+   ---------------------------------------------------------
+   Existe só quando o aulão tem data confirmada (CONFIG.ops.*.
+   inicio). Sem data, o script esconde o bloco inteiro — um
+   relógio zerado ou um "em breve" dentro de dígitos lê como
+   defeito, não como aviso.
+   ========================================================= */
+.relogio { display: inline-flex; gap: 8px; }
+.relogio span {
+  display: grid; place-items: center; min-width: 64px; padding: 10px 8px 9px;
+  background: rgba(10,10,11,.66); box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 9px) 0, 100% 9px, 100% 100%, 9px 100%, 0 calc(100% - 9px));
+}
+.relogio b {
+  font-family: var(--font-title); font-size: clamp(22px, 3vw, 30px); font-weight: 800;
+  line-height: 1; letter-spacing: 1px; color: var(--gold-light);
+  font-variant-numeric: tabular-nums;
+}
+.relogio small {
+  margin-top: 5px; font-size: 9.5px; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--text-mute);
+}
+.hero__relogio { margin-top: 30px; display: grid; justify-items: center; gap: 10px; }
+.hero__relogio > em {
+  font-style: normal; font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--text-mute);
+}
+[hidden] { display: none !important; }
+
+/* =========================================================
+   O FORMATO — os quatro pilares do aulão
+   ========================================================= */
+.pilares { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.pilar {
+  position: relative; padding: 30px 22px 26px; isolation: isolate;
+  background: linear-gradient(180deg, rgba(24,24,30,.9), rgba(15,15,19,.92));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  transition: transform var(--t), box-shadow var(--t);
+}
+.pilar::before {
+  content: ''; position: absolute; inset: 0; z-index: -1; opacity: 0;
+  background: radial-gradient(260px 200px at var(--mx, 50%) var(--my, 30%), rgba(175,146,86,.16), transparent 70%);
+  clip-path: inherit; transition: opacity var(--t);
+}
+.pilar:hover { transform: translateY(-5px); box-shadow: inset 0 0 0 1px var(--border-active); }
+.pilar:hover::before { opacity: 1; }
+/* O número grande é o argumento do cartão; o ícone é só a assinatura. */
+.pilar__num {
+  display: block; font-family: var(--font-title);
+  font-size: clamp(44px, 5vw, 60px); font-weight: 800; line-height: .9; letter-spacing: -1px;
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold) 55%, var(--gold-dark));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.pilar__num small { font-size: .42em; letter-spacing: 1px; margin-left: 3px; }
+.pilar__ico { display: block; width: 46px; height: 46px; color: var(--gold); }
+.pilar__ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.pilar h3 {
+  margin-top: 18px; font-family: var(--font-title); font-size: 17px; font-weight: 800;
+  letter-spacing: .6px; text-transform: uppercase; color: var(--text); line-height: 1.2;
+}
+.pilar p { margin-top: 8px; color: var(--text-dim); font-size: 14.5px; line-height: 1.55; }
+
+/* =========================================================
+   O CONTEÚDO — as matérias da prova
+   ---------------------------------------------------------
+   Só o nome da matéria e o ícone: sem tópico, sem horário, sem
+   ordem. É o que a página pode garantir hoje. O oitavo cartão
+   fecha a grade 4×2 dizendo que a divisão das aulas vem depois —
+   é aviso, não promessa, e por isso vai tracejado e apagado.
+   ========================================================= */
+.materias { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 1100px; margin-inline: auto; }
+.materia {
+  display: flex; align-items: center; gap: 14px; min-height: 92px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(24,24,30,.9), rgba(15,15,19,.93));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  transition: transform var(--t), box-shadow var(--t);
+}
+.materia:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--border-active); }
+.materia b {
+  font-family: var(--font-title); font-size: 15.5px; font-weight: 800; line-height: 1.2;
+  letter-spacing: .4px; text-transform: uppercase; color: var(--text);
+}
+.materia--nota { background: transparent; box-shadow: none; outline: 1px dashed var(--border); outline-offset: -1px; clip-path: none; }
+.materia--nota:hover { transform: none; box-shadow: none; }
+.materia--nota .tema__ico { opacity: .6; }
+.materia--nota b { color: var(--text-dim); font-size: 13.5px; }
+.materia--nota small { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.4; color: var(--text-mute); }
+
+/* o ícone num hexágono de ouro — aro no fundo, núcleo escuro por cima */
+.tema__ico {
+  position: relative; display: grid; place-items: center; flex-shrink: 0;
+  width: 52px; height: 58px; color: var(--gold-light);
+  background: linear-gradient(160deg, var(--gold-light), var(--gold-deep) 55%, var(--gold));
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.tema__ico::before {
+  content: ''; position: absolute; inset: 1.5px;
+  background: radial-gradient(circle at 50% 35%, #1f1f26, #0b0b0e 75%);
+  clip-path: inherit;
+}
+.tema__ico svg {
+  position: relative; width: 24px; height: 24px;
+  fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform .42s var(--freada);
+}
+.materia:hover .tema__ico svg { transform: scale(1.12); }
+
+/* =========================================================
+   ONDE E QUANDO
+   ========================================================= */
+.ficha-evento { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.info {
+  position: relative; padding: 28px 24px;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+}
+.info__ico { display: block; width: 34px; height: 34px; color: var(--gold); margin-bottom: 16px; }
+.info__ico svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.info__cab {
+  display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 3.6px;
+  text-transform: uppercase; color: var(--gold);
+}
+.info__val {
+  display: block; margin-top: 8px; font-family: var(--font-title);
+  font-size: clamp(22px, 2.6vw, 28px); font-weight: 800; line-height: 1.1;
+  letter-spacing: .5px; text-transform: uppercase; color: var(--text);
+}
+.info__sub { display: block; margin-top: 8px; color: var(--text-dim); font-size: 14.5px; line-height: 1.5; }
+/* "A definir" não pode parecer dado: pastilha própria, pulsando no acento */
+.info__status {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 14px;
+  height: 28px; padding: 0 11px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold-light); background: rgba(175,146,86,.08); box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px));
+}
+.info__status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--op-accent); animation: pulse 2.2s infinite;
+}
+
+/* =========================================================
+   INGRESSOS — a trilha dos lotes
+   ---------------------------------------------------------
+   Quatro paradas numa linha: os três lotes comuns e o VIP. O
+   lote aberto acende; os encerrados apagam com o preço riscado;
+   os próximos esperam. O VIP fica separado por um fio vertical
+   porque ele não é "o 4º lote" — corre em paralelo.
+
+   Estado e preço vêm do CONFIG (script.js). Sem preço, "Em breve".
+   ========================================================= */
+.lotes {
+  list-style: none; display: grid; grid-template-columns: repeat(3, 1fr) 1.1fr;
+  max-width: 940px; margin: 0 auto 34px;
+  background: linear-gradient(180deg, rgba(22,22,28,.9), rgba(13,13,16,.94));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+.lotes__item {
+  position: relative; display: grid; justify-items: center; gap: 4px;
+  padding: 20px 12px 18px; text-align: center;
+}
+.lotes__item + .lotes__item { border-left: 1px solid var(--border-soft); }
+.lotes__item--vip {
+  border-left: 1px solid var(--border-active) !important;
+  background: radial-gradient(220px 140px at 50% 0%, rgba(175,146,86,.14), transparent 70%);
+}
+/* a seta entre os lotes comuns: o preço anda para a direita */
+.lotes__item:not(.lotes__item--vip):not(:nth-child(3))::after {
+  content: ''; position: absolute; right: -6px; top: 50%; z-index: 2;
+  width: 11px; height: 11px; transform: translateY(-50%) rotate(45deg);
+  background: var(--bg-2); box-shadow: 1px -1px 0 0 var(--border);
+}
+.lotes__n {
+  font-family: var(--font-title); font-size: 11px; font-weight: 800;
+  letter-spacing: 3px; color: var(--text-mute);
+}
+.lotes__item b {
+  font-family: var(--font-title); font-size: 17px; font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim);
+}
+.lotes__preco {
+  font-family: var(--font-title); font-size: 20px; font-weight: 800;
+  letter-spacing: .5px; color: var(--text-dim);
+}
+.lotes__status {
+  margin-top: 4px; padding: 3px 9px;
+  font-size: 9.5px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--text-mute); box-shadow: inset 0 0 0 1px var(--border-soft);
+}
+/* o lote aberto (ou o próximo a abrir) */
+.lotes__item.is-atual { background: radial-gradient(240px 150px at 50% 0%, var(--op-halo), transparent 72%); }
+.lotes__item.is-atual::before {
+  content: ''; position: absolute; left: 14%; right: 14%; top: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-pale), transparent);
+  box-shadow: 0 0 14px var(--gold);
+}
+.lotes__item.is-atual .lotes__n,
+.lotes__item.is-atual b { color: var(--gold-light); }
+.lotes__item.is-atual .lotes__preco,
+.lotes__item--vip .lotes__preco {
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold) 55%, var(--gold-dark));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.lotes__item.is-atual .lotes__status {
+  color: #0B0A08; background: linear-gradient(168deg, var(--gold-pale), var(--gold));
+  box-shadow: none; animation: pulse 2.2s infinite;
+}
+.lotes__item--vip b, .lotes__item--vip .lotes__n { color: var(--gold-light); }
+.lotes__item.is-encerrado { opacity: .45; }
+.lotes__item.is-encerrado .lotes__preco { text-decoration: line-through; text-decoration-color: var(--danger); }
+
+/* =========================================================
+   INGRESSOS — os dois cartões (Comum × VIP)
+   ---------------------------------------------------------
+   Herdados da Operação Alvorada. stretch nos dois: a lista do
+   comum é maior, e o flex:1 dela empurra preço e botão para a
+   mesma linha nos dois cartões — a comparação fica de relance.
+   ========================================================= */
+.planos {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px;
+  align-items: stretch; max-width: 940px; margin-inline: auto;
+}
+.plano {
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
+  background: linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+  transition: transform var(--t), box-shadow var(--t);
+}
+.plano__head, .plano__lista, .plano__rodape { position: relative; z-index: 1; }
+.plano:hover { transform: translateY(-5px); box-shadow: inset 0 0 0 1px var(--border-active); }
+
+.plano--vip {
+  background:
+    radial-gradient(520px 260px at 50% 0%, rgba(175,146,86,.16), transparent 70%),
+    linear-gradient(180deg, #1B1B23, var(--bg-2));
+  box-shadow: inset 0 0 0 1px rgba(175,146,86,.45);
+}
+.plano--vip:hover { box-shadow: inset 0 0 0 1px var(--gold); }
+/* a marca da PMPE sangrando pelo canto direito do VIP, em sussurro */
+.plano__brasao {
+  position: absolute; z-index: 0; pointer-events: none;
+  right: -70px; top: 44%; transform: translateY(-50%);
+  width: 300px; height: 300px;
+  background: var(--op-marca) center / contain no-repeat;
+  opacity: .1;
+  mask-image: linear-gradient(95deg, transparent 6%, #000 58%);
+  -webkit-mask-image: linear-gradient(95deg, transparent 6%, #000 58%);
+  transition: opacity var(--t);
+}
+.plano--vip:hover .plano__brasao { opacity: .16; }
+.plano__selo {
+  position: absolute; top: 0; right: 0; z-index: 2;
+  padding: 7px 18px 7px 22px;
+  background: linear-gradient(168deg, var(--gold-pale), var(--gold) 45%, var(--gold-dark));
+  color: #0B0A08; font-size: 10px; font-weight: 700;
+  letter-spacing: 2.6px; text-transform: uppercase;
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+}
+.plano__head { padding: 32px 30px 22px; border-bottom: 1px solid var(--border); }
+.plano--vip .plano__head { border-bottom-color: rgba(175,146,86,.32); }
+.plano__tag {
+  display: inline-block; margin-bottom: 12px; padding: 5px 12px;
+  background: rgba(175,146,86,.12); box-shadow: inset 0 0 0 1px var(--border-active);
+  font-size: 10px; font-weight: 700; letter-spacing: 2.6px;
+  text-transform: uppercase; color: var(--gold);
+}
+.plano__nome {
+  font-family: var(--font-title); font-size: clamp(24px, 3.2vw, 32px); font-weight: 800;
+  line-height: 1.04; letter-spacing: 1px; text-transform: uppercase; color: var(--text);
+}
+.plano--vip .plano__nome {
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold) 55%, var(--gold-dark));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.plano__desc { margin-top: 10px; font-size: 15.5px; line-height: 1.6; color: var(--text-dim); }
+
+.plano__lista { list-style: none; flex: 1; display: grid; gap: 13px; padding: 24px 30px 26px; align-content: start; }
+.plano__lista li {
+  position: relative; padding-left: 32px;
+  font-size: 15.5px; line-height: 1.5; color: var(--text-dim);
+}
+.plano__lista li::before {
+  content: ''; position: absolute; left: 0; top: 0;
+  width: 21px; height: 22px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4L18 8' fill='none' stroke='%23C9AE7A' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat,
+    rgba(175,146,86,.14);
+  box-shadow: inset 0 0 0 1px rgba(175,146,86,.4);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.plano__lista .plano__tudo { color: var(--gold-light); font-weight: 700; }
+/* ─── os adicionais do comum ───────────────────────────────
+   Como na Alvorada ("por mais R$ 45 leve a dogtag"): a oferta mora DENTRO
+   da lista, logo abaixo dos benefícios. Mas é compra, não benefício — então
+   perde o visto, ganha um "+" em ouro e uma caixa tracejada própria. */
+.plano__lista .plano__addon {
+  padding: 10px 12px 10px 40px;
+  border: 1px dashed var(--border-active);
+  background: rgba(175,146,86,.05);
+  font-size: 14.5px; color: var(--text-dim);
+}
+.plano__lista .plano__addon + .plano__addon { margin-top: -5px; }
+.plano__lista li:not(.plano__addon) + .plano__addon { margin-top: 6px; }
+.plano__lista .plano__addon b { color: var(--gold-light); font-weight: 800; }
+.plano__lista .plano__addon::before {
+  left: 11px; top: 50%; transform: translateY(-50%);
+  background: rgba(175,146,86,.16); box-shadow: inset 0 0 0 1px var(--border-active);
+  content: '+'; display: grid; place-items: center;
+  font-family: var(--font-title); font-size: 15px; font-weight: 800; color: var(--gold-light);
+}
+/* a Dog Tag especial é o item de peso do VIP: mesma ênfase da Alvorada */
+.plano__lista .plano__vipitem { color: var(--gold-light); font-weight: 800; letter-spacing: .3px; }
+.plano__lista li b { color: var(--text); }
+
+.plano__rodape { padding: 0 30px 30px; }
+.plano__preco {
+  text-align: center; padding: 20px 16px 18px; margin-bottom: 16px;
+  background: linear-gradient(180deg, rgba(10,10,11,.55), rgba(10,10,11,.2));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.plano--vip .plano__preco { box-shadow: inset 0 0 0 1px rgba(175,146,86,.34); }
+.plano__preco-label {
+  display: block; margin-bottom: 8px;
+  font-size: 10px; font-weight: 700; letter-spacing: 2.8px;
+  text-transform: uppercase; color: var(--text-mute);
+}
+.plano__preco b {
+  display: block; font-family: var(--font-title);
+  font-size: clamp(34px, 5vw, 48px); font-weight: 800; line-height: 1; letter-spacing: .5px;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, var(--gold-pale), var(--gold) 52%, var(--gold-dark));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+/* "Em breve" no lugar do preço: menor, para não parecer um valor */
+.plano__preco b.is-vazio { font-size: clamp(24px, 3vw, 30px); letter-spacing: 2px; }
+.plano__preco-nota {
+  display: block; margin-top: 10px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 1.4px;
+  text-transform: uppercase; color: var(--op-accent);
+}
+
+/* =========================================================
+   À PARTE — Dog Tag e Camisa
+   ========================================================= */
+.adicionais { max-width: 940px; margin: 54px auto 0; }
+.adicionais__head { text-align: center; margin-bottom: 24px; }
+.adicionais__head h3 {
+  margin-top: 12px; font-family: var(--font-title); font-size: clamp(22px, 3vw, 30px); font-weight: 800;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text);
+}
+.adicionais__head p { margin-top: 8px; color: var(--text-dim); font-size: 15.5px; }
+.adicionais__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.adicional {
+  display: grid; grid-template-columns: 170px 1fr; align-items: center; gap: 20px;
+  padding: 20px 24px 20px 16px;
+  background:
+    radial-gradient(260px 200px at 18% 50%, rgba(175,146,86,.12), transparent 70%),
+    linear-gradient(180deg, var(--bg-3), var(--bg-2));
+  box-shadow: inset 0 0 0 1px var(--border);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+  transition: box-shadow var(--t);
+}
+.adicional:hover { box-shadow: inset 0 0 0 1px var(--border-active); }
+.adicional__arte { margin: 0; }
+.adicional__arte svg { display: block; width: 100%; height: auto; overflow: visible; }
+.adicional:hover .adicional__arte svg { animation: balanca 1.6s var(--ease); }
+@keyframes balanca {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-3deg); }
+  65% { transform: rotate(2deg); }
+}
+.adicional__corrente { fill: none; stroke: #8A7040; stroke-width: 3; stroke-dasharray: 2 5; stroke-linecap: round; }
+.adicional__camisa { fill: #16161B; stroke: #AF9256; stroke-width: 2; stroke-linejoin: round; }
+.adicional__grav {
+  font-family: 'Oxanium', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 2px;
+  fill: #3a2e18;
+}
+.adicional__grav--g { font-size: 18px; fill: #2a2112; }
+.adicional__grav--p { font-size: 8.5px; letter-spacing: 1px; }
+.adicional__camisa ~ .adicional__grav { fill: #E8E4D9; font-size: 12px; letter-spacing: 3px; }
+.adicional__camisa ~ .adicional__grav--g { fill: #C9AE7A; font-size: 17px; }
+
+.adicional h4 {
+  font-family: var(--font-title); font-size: 19px; font-weight: 800;
+  letter-spacing: .8px; text-transform: uppercase; color: var(--text);
+}
+.adicional p { margin-top: 6px; font-size: 14.5px; line-height: 1.5; color: var(--text-dim); }
+/* as duas formas de levar o item: inclusa no VIP × preço avulso no comum */
+.adicional__opcoes { list-style: none; margin-top: 14px; display: grid; gap: 1px; background: var(--border-soft); box-shadow: 0 0 0 1px var(--border-soft); }
+.adicional__opcoes li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 8px 12px; background: rgba(10,10,11,.72);
+}
+.adicional__opcoes span {
+  font-size: 11px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; color: var(--text-mute);
+}
+.adicional__opcoes b {
+  font-family: var(--font-title); font-size: 17px; font-weight: 800; letter-spacing: .4px;
+  color: var(--gold-light); white-space: nowrap;
+}
+.adicional__opcoes .adicional__inclusa {
+  font-size: 11px; letter-spacing: 1.8px; text-transform: uppercase;
+  padding: 3px 9px; color: #0B0A08;
+  background: linear-gradient(168deg, var(--gold-pale), var(--gold) 50%, var(--gold-dark));
+}
+.adicionais__nota {
+  margin-top: 16px; text-align: center;
+  font-size: 12.5px; letter-spacing: .6px; color: var(--text-mute);
+}
+
+/* =========================================================
+   CHECKOUT AINDA SEM LINK
+   ---------------------------------------------------------
+   Enquanto o CONFIG.ops.*.checkout está vazio, o clique no CTA
+   não navega: ele abre este aviso. Botão que não faz nada lê
+   como página quebrada; o aviso diz que é a inscrição que ainda
+   não abriu.
+   ========================================================= */
+.aviso {
+  position: fixed; left: 50%; bottom: 28px; z-index: 350;
+  display: flex; align-items: center; gap: 12px;
+  width: max-content; max-width: calc(100% - 32px); padding: 14px 20px;
+  background: rgba(12,12,15,.96); box-shadow: inset 0 0 0 1px var(--border-active);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  font-size: 13.5px; font-weight: 700; letter-spacing: 1.2px; line-height: 1.45; color: var(--text);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 16px);
+  transition: opacity .3s var(--ease), transform .3s var(--freada), visibility .3s;
+}
+.aviso.is-on { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.aviso i {
+  flex-shrink: 0; width: 9px; height: 10px; display: block; background: var(--gold);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+.aviso b { color: var(--gold-light); }
+
+/* =========================================================
+   RESPONSIVO
+   ---------------------------------------------------------
+   A maior parte do tráfego chega pelo celular. Em cada quebra
+   alguma peça muda de forma, não só de largura.
+   ========================================================= */
+@media (max-width: 1080px) {
+  .nav { display: none; }
+  .opsel { margin-left: auto; }
+  .footer__inner { grid-template-columns: 1fr 1fr; }
+  .pilares { grid-template-columns: repeat(2, 1fr); }
+  .materias { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 860px) {
+  .ficha-evento { grid-template-columns: 1fr; }
+  .planos, .adicionais__grid { grid-template-columns: 1fr; max-width: 520px; }
+  .adicionais { max-width: 520px; }
+  /* a trilha vira 2×2: dois lotes em cima, o 3º e o VIP embaixo */
+  .lotes { grid-template-columns: 1fr 1fr; max-width: 520px; }
+  .lotes__item:nth-child(3) { border-left: 0; }
+  .lotes__item:nth-child(n+3) { border-top: 1px solid var(--border-soft); }
+  .lotes__item::after { display: none; }
+}
+
+@media (max-width: 720px) {
+  body { font-size: 16px; }
+  .section { padding: 74px 0; }
+  .container { width: calc(100% - 32px); }
+
+  .header__inner { width: calc(100% - 24px); gap: 12px; }
+  .brand__nome { font-size: 16px; letter-spacing: 2px; }
+  .brand__nome i { font-size: 8.5px; letter-spacing: 2px; }
+  .header .btn { display: none; }
+  .opsel { height: 36px; padding-left: 11px; gap: 8px; }
+  .opsel b { font-size: 12px; letter-spacing: 1.4px; }
+
+  .hero { min-height: auto; padding-top: calc(var(--nav-h) + 28px); padding-bottom: 58px; }
+  .hero__bg i { opacity: .22; }
+  .hero__cta { flex-direction: column; }
+  .hero__cta .btn { width: 100%; }
+  .tag { height: auto; min-height: 38px; padding: 8px 14px; font-size: 10.5px;
+         letter-spacing: 2px; line-height: 1.5; }
+  .scroller { display: none; }
+  .ficha { grid-template-columns: repeat(2, 1fr); margin-top: 34px; }
+  .relogio span { min-width: 58px; }
+
+  .section::before, .final__marca { background-size: auto 420px; }
+
+  .pilares { grid-template-columns: 1fr; }
+  .pilar { display: grid; grid-template-columns: 64px 1fr; column-gap: 16px; padding: 22px 20px; }
+  .pilar__num, .pilar__ico { grid-row: span 2; align-self: start; }
+  .pilar__num { font-size: 42px; }
+  .pilar h3 { margin-top: 0; }
+
+  .materias { gap: 8px; }
+  .materia { min-height: 0; padding: 14px 12px; gap: 10px; }
+  .materia b { font-size: 13px; }
+  .materia .tema__ico { width: 40px; height: 45px; }
+  .materia .tema__ico svg { width: 19px; height: 19px; }
+  .materia--nota { grid-column: 1 / -1; }
+
+  .dock { display: flex; }
+  .footer__bar { padding-bottom: 96px; }
+  .float { bottom: calc(84px + env(safe-area-inset-bottom)); width: 48px; height: 48px; }
+  .float svg { width: 24px; height: 24px; }
+  .aviso { bottom: calc(92px + env(safe-area-inset-bottom)); }
+
+  .plano__head { padding: 26px 22px 18px; }
+  .plano__lista { padding: 20px 22px 22px; }
+  .plano__rodape { padding: 0 22px 24px; }
+  /* a arte sobe e a tabela de preço ganha a largura inteira do cartão */
+  .adicional { grid-template-columns: 1fr; gap: 6px; padding: 18px 18px 20px; }
+  .adicional__arte { width: 150px; justify-self: center; }
+  .adicional h4 { font-size: 17px; }
+
+  .final { padding: 84px 0; }
+  .final .btn { width: 100%; }
+}
+
+@media (max-width: 420px) {
+  .ficha { grid-template-columns: 1fr 1fr; }
+  .relogio { gap: 6px; }
+  .relogio span { min-width: 52px; padding: 9px 4px 8px; }
+}
+
+/* =========================================================
+   MOVIMENTO REDUZIDO
+   ---------------------------------------------------------
+   Some o movimento perpétuo (brasas, aro, varreduras) e a cena
+   de entrada do brasão. O conteúdo aparece inteiro, parado.
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .reveal, .anim, .selo--carimbo { opacity: 1 !important; transform: none !important; }
+  .brasas, .sparks, .hero__cacos, .selo__clarao, .selo__onda { display: none; }
+}
