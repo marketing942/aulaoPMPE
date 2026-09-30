@@ -230,10 +230,8 @@
     <!-- ================= FITA DE URGÊNCIA ================= -->
     <div class="strip strip--fita" aria-hidden="true">
       <div class="strip__track">
-        <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote
-          único</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
-        <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote
-          único</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
+        <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote único</span><span>Dog Tag grátis · 100 primeiros VIPs</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
+        <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote único</span><span>Dog Tag grátis · 100 primeiros VIPs</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
       </div>
     </div>
 
@@ -411,8 +409,10 @@
      ---------------------------------------------------------
      Três lotes de ingresso comum (o valor sobe a cada virada) e um lote
      único de VIP. Modelo herdado da Operação Alvorada:
-       · VIP     → Camisa oficial + Dog Tag especial (dupla) INCLUSAS
-       · Comum   → Dog Tag comum (+R$ 20,00) e Camisa (+R$ 69,90) à parte
+       · VIP     → primeiras fileiras + Camisa oficial INCLUSAS; Dog Tag de
+                   brinde só para as 100 PRIMEIRAS compras do VIP
+       · Comum   → Camisa (+R$ 69,90) à parte
+       A Dog Tag NÃO é vendida — nem na página, nem no local do evento.
 
      ⚠️ Preços, lote aberto e links de checkout moram no CONFIG do script.js.
      Preço vazio = "Em breve". Link vazio = aviso "inscrições abrem em breve".
@@ -423,8 +423,9 @@
           <span class="eyebrow">Edital publicado · a corrida começou</span>
           <h2 class="section__title" id="ing-title">Cerca de 400 lugares. <span class="gold">Escolha o seu.</span></h2>
           <p class="section__lead">
-            O <strong>VIP</strong> é lote único: <strong>primeiras fileiras garantidas</strong>, Camisa oficial
-            e Dog Tag especial já inclusas. O comum vem em três lotes — o valor sobe a cada virada.
+            O <strong>VIP</strong> é lote único: <strong>primeiras fileiras garantidas</strong> e Camisa oficial
+            inclusa — e os <strong>100 primeiros</strong> ainda levam a Dog Tag de brinde.
+            O comum vem em três lotes — o valor sobe a cada virada.
           </p>
         </div>
 
@@ -486,15 +487,21 @@
               <header class="plano__head">
                 <span class="plano__tag">Lote único · vagas limitadas</span>
                 <h3 class="plano__nome">Ingresso VIP</h3>
-                <p class="plano__desc">Tudo do comum, nas primeiras fileiras, com a Camisa oficial e a Dog Tag especial
-                  já inclusas.</p>
+                <p class="plano__desc">Tudo do comum, nas primeiras fileiras e com a Camisa oficial inclusa.</p>
               </header>
               <ul class="plano__lista">
                 <li class="plano__tudo">Tudo do Ingresso Comum</li>
                 <li class="plano__destaque"><b>Primeiras fileiras garantidas</b> no Teatro Difusora</li>
                 <li><b>Camisa oficial</b> do Aulão PMPE inclusa</li>
-                <li class="plano__vipitem">Dog Tag Gratuita para os 100 Primeiros</li>
+                <li class="plano__vipitem">Dog Tag gratuita para os 100 primeiros <span class="plano__so100">Só 100</span></li>
               </ul>
+              <!-- A regra da Dog Tag, por escrito. A página NÃO sabe quantas já
+                   saíram (não tem contador), então não promete que você está
+                   entre os 100 — e deixa claro que ela não é vendida. -->
+              <p class="plano__regra">
+                Dog Tag: valem as <b>100 primeiras compras confirmadas</b> do VIP. Ela não é vendida
+                à parte nem no local — depois das 100, o VIP segue com todo o resto.
+              </p>
               <div class="plano__rodape">
                 <div class="plano__preco">
                   <span class="plano__preco-label">Ingresso VIP · lote único</span>
@@ -523,7 +530,6 @@
               <li>Vários professores e o conteúdo que cai na prova</li>
               <li>Resolução de questões no estilo da banca</li>
               <li>Seu lugar na plateia do Teatro Difusora</li>
-              <li class="plano__addon"><span>Por mais <b>R$ 20,00</b>, leve a <b>Dog Tag comum</b></span></li>
               <li class="plano__addon"><span>Por mais <b>R$ 69,90</b>, leve a <b>Camisa oficial</b></span></li>
             </ul>
             <div class="plano__rodape">
@@ -544,62 +550,21 @@
 
         </div>
 
-        <!-- ─── CAMISA E DOG TAG ───
+        <!-- ─── A CAMISA OFICIAL ───
+         A Dog Tag NÃO aparece aqui: ela não é vendida — só sai de brinde para
+         os 100 primeiros VIPs (ver o cartão do VIP).
          ⚠️ Sem foto ainda: as artes abaixo são ilustrações em SVG. Quando as
-         imagens chegarem, troque cada <svg> por
+         imagem chegar, troque o <svg> por
          <img src="public/NOME.webp" alt="..." width="..." height="..." loading="lazy">
          dentro do mesmo <figure class="adicional__arte">. -->
         <div class="adicionais">
           <div class="adicionais__head">
-            <span class="eyebrow">Camisa e Dog Tag</span>
-            <h3>Leve o aulão <span class="gold">com você</span></h3>
-            <p>No VIP, os dois já vêm inclusos. No comum, você adiciona o que quiser.</p>
+            <span class="eyebrow">Camisa oficial</span>
+            <h3>Vista a <span class="gold">farda do aulão</span></h3>
+            <p>Inclusa no VIP. Com o ingresso comum, você leva por + R$ 69,90.</p>
           </div>
 
-          <div class="adicionais__grid">
-            <article class="adicional">
-              <figure class="adicional__arte">
-                <svg viewBox="0 0 220 170" role="img" aria-label="Ilustração da Dog Tag do Aulão PMPE">
-                  <defs>
-                    <linearGradient id="dtMetal" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stop-color="#F0DCB0" />
-                      <stop offset=".35" stop-color="#C9AE7A" />
-                      <stop offset=".7" stop-color="#8A7040" />
-                      <stop offset="1" stop-color="#C9AE7A" />
-                    </linearGradient>
-                    <linearGradient id="dtMetal2" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0" stop-color="#8A7040" />
-                      <stop offset=".5" stop-color="#5E4B29" />
-                      <stop offset="1" stop-color="#8A7040" />
-                    </linearGradient>
-                  </defs>
-                  <path class="adicional__corrente" d="M40 8 C 70 70, 150 70, 180 8" />
-                  <g transform="rotate(-12 96 104)">
-                    <rect x="62" y="52" width="68" height="104" rx="22" fill="url(#dtMetal2)" />
-                    <circle cx="96" cy="66" r="5" fill="#0A0A0B" />
-                  </g>
-                  <g transform="rotate(8 126 100)">
-                    <rect x="92" y="46" width="68" height="104" rx="22" fill="url(#dtMetal)" />
-                    <rect x="97" y="51" width="58" height="94" rx="18" fill="none" stroke="#5E4B29"
-                      stroke-opacity=".5" />
-                    <circle cx="126" cy="60" r="5" fill="#0A0A0B" />
-                    <text x="126" y="90" text-anchor="middle" class="adicional__grav">AULÃO</text>
-                    <text x="126" y="112" text-anchor="middle" class="adicional__grav adicional__grav--g">PMPE</text>
-                    <text x="126" y="132" text-anchor="middle"
-                      class="adicional__grav adicional__grav--p">18.10.2026</text>
-                  </g>
-                </svg>
-              </figure>
-              <div class="adicional__txt">
-                <h4>Dog Tag do Aulão</h4>
-                <p>A placa de identificação da tropa, com o nome do aulão e a data gravados.</p>
-                <ul class="adicional__opcoes">
-                  <li><span>Especial dupla · VIP</span><b class="adicional__inclusa">Inclusa</b></li>
-                  <li><span>Comum · avulsa</span><b>+ R$ 20,00</b></li>
-                </ul>
-              </div>
-            </article>
-
+          <div class="adicionais__grid adicionais__grid--um">
             <article class="adicional">
               <figure class="adicional__arte">
                 <svg viewBox="0 0 220 170" role="img" aria-label="Ilustração da Camisa oficial do Aulão PMPE">
@@ -622,8 +587,7 @@
             </article>
           </div>
 
-          <p class="adicionais__nota">Imagens ilustrativas — as fotos oficiais da Camisa e da Dog Tag chegam em breve.
-          </p>
+          <p class="adicionais__nota">Imagem ilustrativa — a foto oficial da Camisa chega em breve.</p>
         </div>
       </div>
     </section>
@@ -649,17 +613,26 @@
             <summary>Qual a diferença entre o ingresso comum e o VIP?</summary>
             <p>
               Os dois dão acesso ao <strong>aulão completo</strong>. O VIP garante lugar nas
-              <strong>primeiras fileiras</strong> do teatro e já vem com a <strong>Camisa oficial</strong> e a
-              <strong>Dog Tag especial dupla</strong> inclusas. Ele tem lote único — quando acaba, não abre outro. O
-              comum é vendido em <strong>três lotes</strong>,
+              <strong>primeiras fileiras</strong> do teatro e já vem com a <strong>Camisa oficial</strong>
+              inclusa — e os <strong>100 primeiros</strong> VIPs levam a Dog Tag de brinde. O VIP tem lote
+              único — quando acaba, não abre outro. O comum é vendido em <strong>três lotes</strong>,
               e o valor sobe a cada virada.
             </p>
           </details>
           <details class="faq__item">
-            <summary>Comprei o comum. Posso levar a Camisa e a Dog Tag?</summary>
+            <summary>Como funciona a Dog Tag?</summary>
             <p>
-              Pode. Com o ingresso comum, a <strong>Dog Tag comum sai por + R$ 20,00</strong> e a
-              <strong>Camisa oficial por + R$ 69,90</strong>. A Dog Tag especial dupla é exclusiva do VIP.
+              Ela <strong>não é vendida</strong> — nem aqui, nem no local do evento. Sai de brinde para as
+              <strong>100 primeiras compras confirmadas do ingresso VIP</strong>, por ordem de compra.
+              Esta página não tem contador e não sabe quantas já saíram; quem confirma é a equipe.
+              Se as 100 já tiverem saído, o VIP continua com todo o resto: primeiras fileiras e Camisa oficial.
+            </p>
+          </details>
+          <details class="faq__item">
+            <summary>Comprei o comum. Posso levar a Camisa?</summary>
+            <p>
+              Pode. Com o ingresso comum, a <strong>Camisa oficial sai por + R$ 69,90</strong>. No VIP
+              ela já vem inclusa.
             </p>
           </details>
           <details class="faq__item">
