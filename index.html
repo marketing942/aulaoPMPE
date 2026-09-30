@@ -14,7 +14,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Aulão PMPE — 18/10 no Teatro Difusora | CPPEM</title>
+<title>Aulão PMPE Pós-Edital — 18/10 no Teatro Difusora | CPPEM</title>
 <meta name="description" content="Aulão presencial do CPPEM para a PMPE: 18 de outubro, das 08h às 18h, no Teatro Difusora. Vários professores, o conteúdo que cai na prova e resolução de questões no estilo da banca. Cerca de 400 lugares.">
 
 <link rel="icon" href="public/favicon.ico" sizes="48x48">
@@ -28,8 +28,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CPPEM Concursos Públicos">
 <meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Aulão PMPE — 18/10 no Teatro Difusora">
-<meta property="og:description" content="Um dia inteiro de aulão presencial para a PMPE, com vários professores e o conteúdo que cai na prova. Cerca de 400 lugares.">
+<meta property="og:title" content="Aulão PMPE Pós-Edital — 18/10 no Teatro Difusora">
+<meta property="og:description" content="O edital saiu. Um dia inteiro de aulão presencial para a PMPE, com vários professores e o conteúdo que cai na prova. Cerca de 400 lugares.">
 <meta name="twitter:card" content="summary_large_image">
 
 <!-- ⚠️ JSON-LD (schema.org/Event) entra quando houver preço e link de venda:
@@ -91,10 +91,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- =========================================================
      HERO
      ---------------------------------------------------------
-     A entrada com movimento: o brasão da PMPE cai no medalhão como um
-     carimbo — clarão, onda hexagonal e faíscas saindo da batida — e o resto
-     da hero entra em cascata depois do impacto. Os tempos moram em
-     --impacto no .hero (styles.css); o script só solta as faíscas.
+     A entrada é uma cena em quatro tempos (tempos em --impacto, styles.css):
+       1. um feixe de luz desce e marca onde o brasão vai cair;
+       2. o brasão despenca com borrão de velocidade e BATE — tranco na tela,
+          clarão, três ondas hexagonais e a chuva de faíscas (script.js);
+       3. a luz de palco acende sobre o medalhão e a tela fica rachada
+          no ponto da batida;
+       4. o carimbo "EDITAL PUBLICADO" bate por cima: é o gancho da página.
+     O resto da hero entra em cascata DEPOIS da batida.
      ========================================================= -->
 <section class="hero" id="topo">
   <div class="hero__bg" id="heroBg" aria-hidden="true"><i></i></div>
@@ -103,32 +107,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="hero__scan" aria-hidden="true"></div>
   <div class="hero__dawn" aria-hidden="true"></div>
   <div class="sparks" id="sparks" aria-hidden="true"></div>
+  <div class="hero__brasas" id="heroBrasas" aria-hidden="true"></div>
   <div class="hero__cacos" id="heroCacos" aria-hidden="true"></div>
+  <div class="hero__flash" aria-hidden="true"></div>
 
   <div class="container hero__inner">
     <span class="tag anim d1">
       <i class="dot" aria-hidden="true"></i>
-      <span>18 de outubro · Teatro Difusora · 08h às 18h</span>
+      <span>Edital publicado · 18/10 · Teatro Difusora</span>
     </span>
 
     <h1 class="hero__title anim d2">
-      <span class="hero__desig">Aulão</span>
+      <span class="hero__desig">Aulão pós-edital</span>
       <span class="luz">PMPE</span>
     </h1>
 
-    <div class="selo selo--carimbo" id="seloHero">
-      <span class="selo__aro" aria-hidden="true"></span>
-      <span class="selo__core">
-        <img src="public/brasao-pmpe.webp" alt="Brasão da Polícia Militar de Pernambuco" width="357" height="419">
-      </span>
-      <i class="selo__clarao" aria-hidden="true"></i>
-      <i class="selo__onda" aria-hidden="true"></i>
-      <i class="selo__onda selo__onda--2" aria-hidden="true"></i>
+    <div class="cena" id="cenaHero">
+      <i class="cena__feixe" aria-hidden="true"></i>
+      <i class="cena__luz" aria-hidden="true"></i>
+      <!-- a tela rachada: linhas de vidro partindo do ponto da batida -->
+      <svg class="cena__racha" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false">
+        <g class="racha__raios">
+          <path pathLength="1" d="M0 0 L14 -9 L22 -8 L35 -19 L52 -22 L70 -37 L96 -44"/>
+          <path pathLength="1" d="M0 0 L16 4 L30 2 L44 12 L63 13 L80 24 L98 27"/>
+          <path pathLength="1" d="M0 0 L6 15 L9 30 L20 44 L22 62 L34 80 L38 98"/>
+          <path pathLength="1" d="M0 0 L-8 13 L-10 27 L-22 38 L-26 57 L-40 70 L-47 95"/>
+          <path pathLength="1" d="M0 0 L-15 5 L-28 1 L-42 10 L-60 8 L-75 19 L-97 18"/>
+          <path pathLength="1" d="M0 0 L-12 -10 L-20 -24 L-36 -30 L-44 -48 L-62 -58 L-72 -90"/>
+          <path pathLength="1" d="M0 0 L2 -16 L-4 -30 L4 -46 L0 -64 L8 -82 L4 -99"/>
+          <path pathLength="1" d="M0 0 L10 -14 L24 -30 L30 -52 L46 -66 L58 -88"/>
+          <path pathLength="1" d="M0 0 L-6 -4 L-20 -8 L-34 -14 L-52 -20 L-80 -26"/>
+        </g>
+        <g class="racha__aneis">
+          <path pathLength="1" d="M35 -19 L44 12 L30 2"/>
+          <path pathLength="1" d="M44 12 L20 44 L-10 27"/>
+          <path pathLength="1" d="M-22 38 L-42 10 L-34 -14"/>
+          <path pathLength="1" d="M-36 -30 L-4 -30 L24 -30"/>
+          <path pathLength="1" d="M63 13 L34 80"/>
+          <path pathLength="1" d="M-60 8 L-40 70"/>
+          <path pathLength="1" d="M-62 -58 L0 -64 L46 -66"/>
+        </g>
+      </svg>
+      <div class="selo selo--carimbo" id="seloHero">
+        <span class="selo__aro" aria-hidden="true"></span>
+        <span class="selo__core">
+          <img src="public/brasao-pmpe.webp" alt="Brasão da Polícia Militar de Pernambuco" width="357" height="419">
+        </span>
+        <i class="selo__clarao" aria-hidden="true"></i>
+        <i class="selo__onda" aria-hidden="true"></i>
+        <i class="selo__onda selo__onda--2" aria-hidden="true"></i>
+        <i class="selo__onda selo__onda--3" aria-hidden="true"></i>
+      </div>
+      <span class="edital" id="editalCarimbo"><small>Edital</small><b>Publicado</b></span>
     </div>
 
     <p class="hero__sub anim d4">
-      Um dia inteiro, vários professores e o conteúdo que cai na prova da
-      Polícia Militar de Pernambuco — num só lugar.
+      <strong>O edital saiu.</strong> Agora é um dia inteiro, com vários professores,
+      em cima do conteúdo que cai na prova da Polícia Militar de Pernambuco.
     </p>
 
     <div class="hero__cta anim d5">
@@ -137,6 +172,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </a>
       <a class="btn btn--ghost btn--lg" href="#conteudo"><span>Ver o conteúdo</span></a>
     </div>
+
+    <!-- Escassez REAL: lote aberto e a virada de preço. O texto sai do CONFIG
+         (script.js); "restam X lugares" só aparece se a equipe informar. -->
+    <a class="urgente anim d5" href="#ingressos">
+      <i aria-hidden="true"></i>
+      <span data-urgencia>1º lote aberto — o mais barato de todos. O valor sobe na virada.</span>
+    </a>
 
     <!-- Some sozinho quando o aulão começa (script.js). -->
     <div class="hero__relogio anim d5" data-relogio-bloco>
@@ -160,11 +202,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="scroller" aria-hidden="true"><i></i></div>
 </section>
 
-<!-- ================= FAIXA CORRIDA ================= -->
-<div class="strip" aria-hidden="true">
+<!-- ================= FITA DE URGÊNCIA ================= -->
+<div class="strip strip--fita" aria-hidden="true">
   <div class="strip__track">
-    <span>Teatro Difusora</span><span>18 de outubro</span><span>Vários professores</span><span>O conteúdo que cai</span><span>Resolução de questões</span><span>Um dia de imersão</span>
-    <span>Teatro Difusora</span><span>18 de outubro</span><span>Vários professores</span><span>O conteúdo que cai</span><span>Resolução de questões</span><span>Um dia de imersão</span>
+    <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote único</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
+    <span>Edital publicado</span><span>1º lote aberto</span><span>Cerca de 400 lugares</span><span>VIP em lote único</span><span>18/10 · Teatro Difusora</span><span>Lotou, lotou</span>
   </div>
 </div>
 
@@ -173,7 +215,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container">
     <div class="section__head">
       <span class="eyebrow">O formato</span>
-      <h2 class="section__title" id="formato-title">Um dia. Um time inteiro. <span class="gold">Só o que cai.</span></h2>
+      <h2 class="section__title" id="formato-title">Um dia. Um time inteiro.<br><span class="gold">Só o que cai.</span></h2>
       <p class="section__lead">
         O <strong>Aulão PMPE</strong> não é mais uma aula solta. É um dia inteiro de imersão,
         presencial, com vários professores e o conteúdo que a prova da Polícia Militar
@@ -300,12 +342,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="section section--alt" id="ingressos" aria-labelledby="ing-title">
   <div class="container">
     <div class="section__head">
-      <span class="eyebrow">Ingressos</span>
+      <span class="eyebrow">Edital publicado · a corrida começou</span>
       <h2 class="section__title" id="ing-title">Cerca de 400 lugares. <span class="gold">Escolha o seu.</span></h2>
       <p class="section__lead">
         São três lotes de ingresso comum — o valor sobe a cada virada — e um lote
         único de <strong>VIP</strong>, que já vem com a Camisa oficial e a Dog Tag especial.
       </p>
+    </div>
+
+    <!-- A escassez, por escrito. Tudo aqui é verdade verificável: o teatro tem
+         ~400 lugares, o 1º lote é o mais barato e o valor sobe na virada.
+         A barra de "lugares restantes" só aparece se CONFIG.ingressos.restantes
+         tiver um número REAL passado pela equipe — nunca um número inventado. -->
+    <div class="escassez">
+      <span class="escassez__alerta"><i aria-hidden="true"></i> Lotou, lotou</span>
+      <p class="escassez__txt">
+        <b>O teatro não estica.</b> São cerca de 400 lugares para um edital que acabou de sair.
+        O <strong data-urgencia-lote>1º lote</strong> é o mais barato de todos — na virada, o valor sobe e não volta.
+      </p>
+      <div class="escassez__barra" data-restantes-bloco hidden>
+        <div class="escassez__cab"><span>Lugares restantes</span><b data-restantes>—</b></div>
+        <i><em data-restantes-fill></em></i>
+      </div>
     </div>
 
     <!-- A trilha dos lotes. Estado e preços são escritos pelo script.js. -->
@@ -535,10 +593,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </span>
     </div>
 
-    <h2>Um dia inteiro.<br>Uma <span class="gold">vantagem</span> que fica.</h2>
+    <h2>O edital saiu.<br>As <span class="gold">400 cadeiras</span> não esperam.</h2>
     <p>
-      Enquanto a concorrência estuda sozinha, você passa o domingo no Teatro Difusora com um
-      time de professores focado na prova da <strong>PMPE</strong>.
+      Enquanto a concorrência ainda está baixando o edital, você passa o domingo no Teatro
+      Difusora com um time de professores focado na prova da <strong>PMPE</strong>.
     </p>
 
     <a class="btn btn--gold btn--lg shine" data-cta href="#ingressos">
@@ -611,7 +669,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="dock" id="dock">
   <div class="dock__info">
     <b>Aulão PMPE</b>
-    <span>18/10 · Teatro Difusora</span>
+    <span data-urgencia-curta>1º lote aberto · 18/10</span>
   </div>
   <a class="btn btn--gold" data-cta href="#ingressos"><span>Garantir vaga</span></a>
 </div>

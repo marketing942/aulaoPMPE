@@ -37,11 +37,20 @@
     ingressos: {
       loteAtual: 1,
       lotes: [
-        { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso" },   // 1º lote
+        { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },   // 1º lote
         { preco: "", checkout: "" },   // 2º lote
         { preco: "", checkout: "" }    // 3º lote
       ],
-      vip: { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" }
+      vip: { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" },
+
+      /* ─── ESCASSEZ ───
+         capacidade: lugares do Teatro Difusora (aprox.).
+         restantes:  ⚠️ SÓ um número REAL, passado pela equipe de vendas.
+                     null = a página não fala em "restam X" — ela continua
+                     com a escassez que é fato (lote, virada, capacidade).
+                     Um contador inventado é mentira na cara de quem compra. */
+      capacidade: 400,
+      restantes: null
     }
   };
 
@@ -111,6 +120,38 @@
     $$("[data-compra]").forEach(function (btn) {
       btn.href = linkDe(btn.getAttribute("data-compra")) || "#ingressos";
     });
+
+    pintarUrgencia(n, lote);
+  }
+
+  /* ─── a escassez ───
+     Três frases, todas verdadeiras por construção: saem do lote que está
+     de fato aberto e, se houver, do número de lugares que a equipe passou. */
+  function pintarUrgencia(n, lote) {
+    var aberto = !!lote.checkout;
+    var r = ING.restantes;
+    var temR = typeof r === "number" && r >= 0;
+    var sufixo = temR ? " · restam " + r + " lugares" : "";
+
+    $$("[data-urgencia]").forEach(function (el) {
+      el.textContent = aberto
+        ? n + "º lote aberto" + (n === 1 ? " — o mais barato de todos" : "") + ". O valor sobe na virada" + sufixo + "."
+        : "Vendas abrem em breve — o 1º lote é o mais barato de todos.";
+    });
+    $$("[data-urgencia-curta]").forEach(function (el) {
+      el.textContent = aberto ? n + "º lote aberto · 18/10" : "18/10 · Teatro Difusora";
+    });
+    $$("[data-urgencia-lote]").forEach(function (el) { el.textContent = n + "º lote"; });
+
+    var bloco = $("[data-restantes-bloco]");
+    if (bloco) {
+      bloco.hidden = !temR;
+      if (temR) {
+        $("[data-restantes]", bloco).textContent = r + " de " + ING.capacidade;
+        var ocupado = Math.max(0, Math.min(100, (1 - r / ING.capacidade) * 100));
+        $("[data-restantes-fill]", bloco).style.setProperty("--ocupado", ocupado.toFixed(1) + "%");
+      }
+    }
   }
   pintarIngressos();
 
@@ -213,17 +254,38 @@
   }
 
   (function carimbo() {
-    var selo  = document.getElementById("seloHero");
-    var cacos = document.getElementById("heroCacos");
-    var hero  = document.getElementById("topo");
+    var selo   = document.getElementById("seloHero");
+    var edital = document.getElementById("editalCarimbo");
+    var cacos  = document.getElementById("heroCacos");
+    var hero   = document.getElementById("topo");
     if (!selo || !cacos || !hero || reduced) return;
 
+    function centro(el) {
+      var re = el.getBoundingClientRect();
+      var rh = hero.getBoundingClientRect();
+      return [re.left - rh.left + re.width / 2, re.top - rh.top + re.height / 2];
+    }
+
+    /* a batida do brasão: a chuva grande */
     selo.addEventListener("animationend", function (e) {
       if (e.animationName !== "carimbo-cai") return;
-      var rs = selo.getBoundingClientRect();
-      var rh = hero.getBoundingClientRect();
-      estilhacar(cacos, rs.left - rh.left + rs.width / 2, rs.top - rh.top + rs.height / 2, 34, 260);
+      var c = centro(selo);
+      estilhacar(cacos, c[0], c[1], 64, 380);
     });
+
+    /* o carimbo do edital: um estouro curto, em brasa, no canto onde ele bate.
+       Contêiner próprio para não apagar as faíscas da batida, que ainda voam. */
+    if (edital) {
+      var cacos2 = document.createElement("div");
+      cacos2.className = "hero__cacos";
+      cacos2.setAttribute("aria-hidden", "true");
+      hero.appendChild(cacos2);
+      edital.addEventListener("animationend", function (e) {
+        if (e.animationName !== "edital-bate") return;
+        var c = centro(edital);
+        estilhacar(cacos2, c[0], c[1], 22, 150);
+      });
+    }
   })();
 
   /* =========================================================
@@ -322,7 +384,7 @@
     "rgba(196,112,63,.85)"    // brasa quente
   ];
 
-  (function semear(alvo, quantidade) {
+  function semear(alvo, quantidade) {
     if (!alvo || reduced) return;
     for (var b = 0; b < quantidade; b++) {
       var br = document.createElement("i");
@@ -335,7 +397,11 @@
       br.style.setProperty("--atraso", "-" + (Math.random() * 26).toFixed(1) + "s");
       alvo.appendChild(br);
     }
-  })(document.getElementById("brasas"), 22);
+  }
+  semear(document.getElementById("brasas"), 22);
+  /* A hero ganha a própria camada, bem mais densa: é a primeira tela e
+     precisa de atmosfera de braseiro, não de fundo parado. */
+  semear(document.getElementById("heroBrasas"), 46);
 
   var sparks = document.getElementById("sparks");
   if (sparks && !reduced) {

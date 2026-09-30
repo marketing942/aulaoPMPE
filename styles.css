@@ -173,7 +173,10 @@ strong, b { font-weight: 700; color: var(--text); }
 .eyebrow::after { background: linear-gradient(90deg, var(--gold), transparent); }
 
 .section__head { text-align: center; max-width: 920px; margin: 0 auto 56px; }
+/* text-wrap: balance divide o título em linhas de tamanho parecido — sem
+   ele sobra "SÓ O" pendurado no fim da primeira linha. */
 .section__title {
+  text-wrap: balance;
   font-family: var(--font-title);
   font-size: clamp(30px, 4.6vw, 52px);
   font-weight: 800; line-height: 1.04; letter-spacing: 1px;
@@ -550,58 +553,244 @@ strong, b { font-weight: 700; color: var(--text); }
   100% { opacity: 0;  transform: scale(1.28); }
 }
 
-/* ─── O CARIMBO — a entrada da hero ────────────────────────
-   O medalhão cai de cima, grande e inclinado, e BATE no lugar: um
-   recuo curto (o "quique"), o clarão, duas ondas hexagonais e as
-   faíscas (script.js, no animationend de carimbo-cai). O resto da
-   hero entra em cascata a partir da batida, e não antes dela.
+/* =========================================================
+   A CENA DE ENTRADA — o brasão e o edital
+   ---------------------------------------------------------
+   Quatro tempos, todos amarrados a --impacto (o instante da
+   batida = atraso + duração da queda). Mudou um, muda o outro,
+   senão o clarão acende no vazio.
 
-   --impacto é o instante da batida (atraso + duração da queda).
-   Mudou um, muda o outro — senão o clarão acende no vazio. */
-.hero { --cai-atraso: .25s; --cai-dur: .5s; --impacto: .75s; }
+     0 → impacto   o FEIXE desce e marca o ponto; o brasão despenca
+                   com borrão de velocidade (blur + brilho estourado)
+     impacto       o TRANCO sacode a hero; clarão, três ondas
+                   hexagonais e as faíscas (script.js, animationend)
+     + .1s         a LUZ DE PALCO acende (com a piscada de refletor) e
+                   a tela RACHA no ponto da batida, como vidro
+     + .55s        o carimbo EDITAL PUBLICADO bate por cima — é o gancho
+
+   O que vem depois do medalhão (sub, CTA, relógio, ficha) só entra
+   depois da batida: a cena não pode competir com texto aparecendo.
+   ========================================================= */
+.hero { --cai-atraso: .42s; --cai-dur: .52s; --impacto: .94s; }
+
+.cena {
+  position: relative; width: clamp(220px, 34vw, 350px); aspect-ratio: 1;
+  margin: clamp(22px, 4vh, 40px) auto 0;
+}
+.cena .selo { width: 100%; margin: 0; }
+
+/* ─── 1 · o feixe ─── */
+.cena__feixe {
+  position: absolute; left: 50%; bottom: 50%; z-index: 0;
+  width: 4px; height: 70vh; margin-left: -2px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(240,220,176,.25) 40%, var(--gold-pale));
+  box-shadow: 0 0 22px 6px rgba(240,220,176,.35), 0 0 60px 18px var(--op-halo);
+  transform-origin: 50% 100%; opacity: 0;
+  animation: feixe var(--impacto) var(--ease) .05s both;
+}
+@keyframes feixe {
+  0%   { opacity: 0;   transform: scaleY(.15) scaleX(.4); }
+  40%  { opacity: .9;  transform: scaleY(1)   scaleX(1); }
+  90%  { opacity: 1;   transform: scaleY(1)   scaleX(1.6); }
+  100% { opacity: 0;   transform: scaleY(1.1) scaleX(9); }
+}
+
+/* ─── 2 · a queda e a batida ─── */
 .selo--carimbo {
   animation:
     carimbo-cai var(--cai-dur) cubic-bezier(.55,0,.9,.35) var(--cai-atraso) both,
-    carimbo-quica .45s var(--freada) var(--impacto) both;
+    carimbo-quica .55s var(--freada) var(--impacto) both;
 }
 @keyframes carimbo-cai {
-  0%   { opacity: 0; transform: translateY(-46vh) rotate(-14deg) scale(1.9); }
+  0%   { opacity: 0; transform: translateY(-62vh) rotate(-12deg) scale(2.2); filter: blur(12px) brightness(1.8); }
   30%  { opacity: 1; }
-  100% { opacity: 1; transform: translateY(0) rotate(0) scale(1.08); }
+  100% { opacity: 1; transform: translateY(0) rotate(0) scale(1.12);          filter: blur(0) brightness(1.35); }
 }
 @keyframes carimbo-quica {
-  0%   { transform: scale(1.08); }
-  35%  { transform: scale(.94); }
-  100% { transform: scale(1); }
+  0%   { transform: scale(1.12); filter: brightness(1.35); }
+  30%  { transform: scale(.93); }
+  60%  { transform: scale(1.03); }
+  100% { transform: scale(1);    filter: brightness(1); }
+}
+/* o tranco: a hero inteira leva o baque, e não só o medalhão */
+.hero__inner { animation: tranco .6s var(--ease) var(--impacto) backwards; }
+@keyframes tranco {
+  0%   { transform: none; }
+  8%   { transform: translate3d(-16px, 10px, 0) rotate(-.6deg); }
+  18%  { transform: translate3d(14px, -12px, 0) rotate(.5deg); }
+  30%  { transform: translate3d(-10px, -5px, 0) rotate(-.3deg); }
+  44%  { transform: translate3d(8px, 7px, 0); }
+  60%  { transform: translate3d(-4px, -3px, 0); }
+  78%  { transform: translate3d(2px, 1px, 0); }
+  100% { transform: none; }
 }
 .selo__clarao {
   position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
-  width: 340%; aspect-ratio: 1; opacity: 0;
-  background: radial-gradient(circle, #FFF6DE 0%, rgba(255,231,176,.8) 7%, var(--op-halo) 18%, transparent 46%);
+  width: 420%; aspect-ratio: 1; opacity: 0;
+  background: radial-gradient(circle, #FFF6DE 0%, rgba(255,231,176,.85) 7%, var(--op-halo) 18%, transparent 46%);
   transform: translate(-50%, -50%);
-  animation: carimbo-clarao .7s var(--ease) var(--impacto) forwards;
+  animation: carimbo-clarao .8s var(--ease) var(--impacto) forwards;
 }
 @keyframes carimbo-clarao {
   0%   { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
-  14%  { opacity: 1; transform: translate(-50%, -50%) scale(.5); }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+  12%  { opacity: 1; transform: translate(-50%, -50%) scale(.55); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.35); }
 }
 .selo__onda {
   position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0;
   box-shadow: inset 0 0 0 3px var(--gold-pale);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  animation: carimbo-onda .6s cubic-bezier(.12,.7,.3,1) var(--impacto) forwards;
+  animation: carimbo-onda .65s cubic-bezier(.12,.7,.3,1) var(--impacto) forwards;
 }
-.selo__onda--2 { animation-delay: calc(var(--impacto) + .1s); animation-duration: .75s; }
+.selo__onda--2 { animation-delay: calc(var(--impacto) + .1s);  animation-duration: .8s; }
+.selo__onda--3 { animation-delay: calc(var(--impacto) + .22s); animation-duration: .95s; box-shadow: inset 0 0 0 2px var(--op-accent); }
+/* A onda some ANTES de crescer demais: ampliado além de ~2x, um hexágono
+   só mostra os dois lados retos, e o que sobra na tela são duas barras
+   verticais atravessando a hero. A opacidade zera em 70% da escala. */
 @keyframes carimbo-onda {
   0%   { opacity: .95; transform: scale(.9); }
-  60%  { opacity: .3; }
-  100% { opacity: 0; transform: scale(2.6); }
+  45%  { opacity: .35; }
+  70%  { opacity: 0; }
+  100% { opacity: 0; transform: scale(2.3); }
 }
+
+/* ─── 3 · a luz de palco e a tela rachada ───
+   Sem raio de sol, sem estrela: é teatro e é polícia. A luz é um canhão
+   vindo de cima, em cone, que acende com a piscada de refletor ligando e
+   deixa uma poça de luz no chão. A rachadura é vidro partido a partir do
+   ponto da batida: aparece inteira no impacto e fica como cicatriz fraca. */
+.cena .selo { position: relative; z-index: 2; }
+.cena__luz {
+  position: absolute; left: 50%; bottom: 42%; z-index: 0; pointer-events: none;
+  width: 190%; height: 95vh; transform: translateX(-50%); opacity: 0;
+  /* termina em transparente: um corte seco aqui vira uma linha horizontal
+     atravessando o medalhão na altura da cintura */
+  background: linear-gradient(180deg, transparent 0%, rgba(240,220,176,.05) 35%, rgba(240,220,176,.15) 78%, transparent 100%);
+  clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  animation: refletor 1s steps(1, end) calc(var(--impacto) + .1s) forwards;
+}
+/* a poça de luz no chão, embaixo do medalhão */
+.cena__luz::after {
+  content: ""; position: absolute; left: 50%; bottom: -34%; transform: translateX(-50%);
+  width: 70%; height: 30%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(240,220,176,.2), transparent 70%);
+}
+@keyframes refletor {
+  0%   { opacity: .8; }
+  12%  { opacity: .15; }
+  22%  { opacity: 1; }
+  30%  { opacity: .35; }
+  42%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+.cena__racha {
+  position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
+  width: 330%; height: 330%; transform: translate(-50%, -50%);
+  overflow: visible; opacity: 0;
+  /* a máscara apaga as pontas: a rachadura é forte perto da batida e some
+     antes de chegar ao título e ao texto — ela não pode brigar com a leitura */
+  mask-image: radial-gradient(circle, #000 18%, rgba(0,0,0,.6) 34%, transparent 58%);
+  -webkit-mask-image: radial-gradient(circle, #000 18%, rgba(0,0,0,.6) 34%, transparent 58%);
+  animation: racha-some 2.2s var(--ease) var(--impacto) forwards;
+}
+.cena__racha path {
+  fill: none; stroke: #F0DCB0; stroke-width: .38; stroke-linejoin: bevel;
+  stroke-dasharray: 1; stroke-dashoffset: 1;
+  filter: drop-shadow(0 0 1.2px rgba(240,220,176,.9));
+  animation: racha-corre .22s cubic-bezier(.2,.8,.3,1) var(--impacto) forwards;
+}
+.racha__aneis path { stroke-width: .26; stroke: rgba(240,220,176,.75); animation-delay: calc(var(--impacto) + .08s); }
+@keyframes racha-corre { to { stroke-dashoffset: 0; } }
+/* aparece inteira na batida e assenta como cicatriz — não some de vez */
+@keyframes racha-some {
+  0%   { opacity: 1; }
+  25%  { opacity: 1; }
+  100% { opacity: .16; }
+}
+/* o estouro de luz da tela inteira, uma fração de segundo */
+.hero__flash {
+  position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0;
+  background: radial-gradient(circle at 50% 55%, rgba(255,246,222,.55), rgba(255,231,176,.12) 40%, transparent 75%);
+  animation: tela-flash .45s var(--ease) var(--impacto) forwards;
+}
+@keyframes tela-flash {
+  0%   { opacity: 0; }
+  15%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* as brasas da hero: mais densas que as da página, e nascem no chão da cena */
+.hero__brasas { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+.hero__brasas .brasa { animation-name: brasa-hero; }
+@keyframes brasa-hero {
+  0%   { opacity: 0;              transform: translate3d(0, 0, 0)          scale(1); }
+  8%   { opacity: var(--op); }
+  30%  {                          transform: translate3d(14px, -24vh, 0)   scale(.92); }
+  60%  {                          transform: translate3d(-10px, -50vh, 0)  scale(.8); }
+  85%  { opacity: calc(var(--op) * .5); }
+  100% { opacity: 0;              transform: translate3d(6px, -78vh, 0)    scale(.5); }
+}
+
+/* ─── 4 · o carimbo do edital ───
+   Chega grande e apagado e BATE inclinado sobre o canto do medalhão, como
+   carimbo de papel. Fundo escuro e translúcido para ler por cima do brasão
+   colorido; borda dupla em brasa, que é a cor do "agora" nesta página. */
+.edital {
+  position: absolute; right: -16%; bottom: 7%; z-index: 6;
+  display: grid; justify-items: center; line-height: 1;
+  padding: 9px 16px 10px;
+  background: rgba(10,10,11,.78);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  border: 2px solid #E0874F;
+  outline: 1px solid rgba(224,135,79,.55); outline-offset: 3px;
+  color: #F2A06B; text-transform: uppercase; font-family: var(--font-title);
+  box-shadow: 0 0 30px -4px rgba(224,135,79,.55);
+  transform: rotate(-13deg); opacity: 0;
+  animation:
+    edital-bate .5s cubic-bezier(.5,0,.75,.2) calc(var(--impacto) + .55s) forwards,
+    edital-pulsa 2.6s var(--ease) calc(var(--impacto) + 1.2s) infinite;
+}
+.edital small { font-size: clamp(10px, 1.1vw, 12px); font-weight: 700; letter-spacing: 5px; color: #F0DCB0; }
+.edital b     { margin-top: 4px; font-size: clamp(17px, 2.1vw, 24px); font-weight: 800; letter-spacing: 2.5px; color: #F2A06B; }
+@keyframes edital-bate {
+  0%   { opacity: 0; transform: rotate(-4deg)  scale(3); filter: blur(6px); }
+  70%  { opacity: 1; transform: rotate(-13deg) scale(.92); filter: blur(0); }
+  85%  {             transform: rotate(-13deg) scale(1.04); }
+  100% { opacity: 1; transform: rotate(-13deg) scale(1); }
+}
+@keyframes edital-pulsa {
+  0%, 100% { box-shadow: 0 0 30px -4px rgba(224,135,79,.55); }
+  50%      { box-shadow: 0 0 44px 2px rgba(224,135,79,.8); }
+}
+
 /* o que vem depois do medalhão entra DEPOIS da batida */
-.hero .d4 { animation-delay: calc(var(--impacto) + .1s); }
-.hero .d5 { animation-delay: calc(var(--impacto) + .22s); }
+.hero .d4 { animation-delay: calc(var(--impacto) + .12s); }
+.hero .d5 { animation-delay: calc(var(--impacto) + .26s); }
 .hero__cacos { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+
+/* ─── o aviso de lote na hero ───
+   Escassez de verdade: o lote aberto e a virada do preço. O ponto em brasa
+   pulsa; o texto sai do CONFIG. */
+.urgente {
+  display: inline-flex; align-items: center; gap: 11px;
+  margin-top: 18px; padding: 10px 18px;
+  background: rgba(224,135,79,.08);
+  box-shadow: inset 0 0 0 1px rgba(224,135,79,.5);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  font-size: 12px; font-weight: 700; letter-spacing: 1.8px; line-height: 1.45;
+  text-transform: uppercase; color: #F0C9A8;
+  transition: background var(--t), box-shadow var(--t);
+}
+.urgente:hover { background: rgba(224,135,79,.14); box-shadow: inset 0 0 0 1px #E0874F; }
+.urgente i {
+  flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: #E0874F;
+  animation: urgente-pisca 1.4s var(--ease) infinite;
+}
+@keyframes urgente-pisca {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(224,135,79,.7); }
+  60%      { box-shadow: 0 0 0 9px rgba(224,135,79,0); }
+}
 
 /* ─── FICHA (números da hero) ──────────────────────────── */
 .ficha {
@@ -653,6 +842,19 @@ strong, b { font-weight: 700; color: var(--text); }
 }
 .strip__track span::after { content: ''; width: 5px; height: 5px; background: var(--gold); transform: rotate(45deg); }
 @keyframes marquee { to { transform: translateX(-50%); } }
+
+/* ─── a fita de urgência ───
+   A faixa corrida vira tarja de ouro, como a fita do bônus da Mentoria: a
+   única peça da página com fundo dourado chapado depois dos botões — é o
+   "está acontecendo agora" passando na tela o tempo todo. */
+.strip--fita {
+  padding: 12px 0; border: 0;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold) 30%, var(--gold-pale) 50%, var(--gold) 70%, var(--gold-dark));
+  box-shadow: 0 10px 40px -12px rgba(175,146,86,.55);
+}
+.strip--fita .strip__track { animation-duration: 26s; }
+.strip--fita .strip__track span { color: #0B0A08; font-weight: 800; letter-spacing: 3.6px; }
+.strip--fita .strip__track span::after { background: #0B0A08; }
 
 /* ─── QUANDO UM BRASÃO NÃO CARREGA ─────────────────────────
    O script esconde a <img> e escreve a sigla no lugar dela, dentro do mesmo
@@ -1030,6 +1232,49 @@ strong, b { font-weight: 700; color: var(--text); }
 }
 
 /* =========================================================
+   ESCASSEZ — o aviso acima dos lotes
+   ---------------------------------------------------------
+   Só escassez verificável: capacidade do teatro, lote mais
+   barato, virada de preço. A barra de lugares restantes nasce
+   escondida e só aparece com um número REAL no CONFIG.
+   ========================================================= */
+.escassez {
+  position: relative; display: grid; gap: 14px; justify-items: center; text-align: center;
+  max-width: 760px; margin: 0 auto 30px; padding: 22px 26px;
+  background: radial-gradient(420px 160px at 50% 0%, rgba(224,135,79,.14), transparent 72%), rgba(10,10,11,.5);
+  box-shadow: inset 0 0 0 1px rgba(224,135,79,.4);
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+.escassez__alerta {
+  display: inline-flex; align-items: center; gap: 9px;
+  font-family: var(--font-title); font-size: 12px; font-weight: 800;
+  letter-spacing: 4px; text-transform: uppercase; color: #F2A06B;
+}
+.escassez__alerta i {
+  width: 8px; height: 8px; border-radius: 50%; background: #E0874F;
+  animation: urgente-pisca 1.4s var(--ease) infinite;
+}
+.escassez__txt { font-size: 16px; line-height: 1.6; color: var(--text-dim); max-width: 60ch; }
+.escassez__txt b { color: var(--text); }
+.escassez__txt strong { color: var(--gold-light); }
+.escassez__barra { width: 100%; max-width: 460px; }
+.escassez__cab {
+  display: flex; justify-content: space-between; margin-bottom: 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-mute);
+}
+.escassez__cab b { font-family: var(--font-title); font-size: 14px; color: #F2A06B; }
+.escassez__barra > i {
+  display: block; height: 8px; background: rgba(255,255,255,.06);
+  box-shadow: inset 0 0 0 1px var(--border-soft); overflow: hidden;
+}
+.escassez__barra em {
+  display: block; height: 100%; width: var(--ocupado, 0%);
+  background: linear-gradient(90deg, var(--gold), #E0874F);
+  box-shadow: 0 0 14px rgba(224,135,79,.6);
+  transition: width 1.2s var(--ease);
+}
+
+/* =========================================================
    INGRESSOS — a trilha dos lotes
    ---------------------------------------------------------
    Quatro paradas numa linha: os três lotes comuns e o VIP. O
@@ -1372,6 +1617,11 @@ strong, b { font-weight: 700; color: var(--text); }
          letter-spacing: 2px; line-height: 1.5; }
   .scroller { display: none; }
   .ficha { grid-template-columns: repeat(2, 1fr); margin-top: 34px; }
+  .cena { width: clamp(210px, 62vw, 260px); }
+  .edital { right: -10%; bottom: 4%; padding: 7px 12px 8px; }
+  .urgente { font-size: 10.5px; letter-spacing: 1.3px; padding: 9px 14px; }
+  .escassez { padding: 18px 16px; }
+  .escassez__txt { font-size: 15px; }
   .relogio span { min-width: 58px; }
 
   .section::before, .final__marca { background-size: auto 420px; }
@@ -1427,5 +1677,11 @@ strong, b { font-weight: 700; color: var(--text); }
     transition-duration: .01ms !important;
   }
   .reveal, .anim, .selo--carimbo { opacity: 1 !important; transform: none !important; }
+  .selo--carimbo { filter: none !important; }
+  .edital { opacity: 1 !important; transform: rotate(-13deg) !important; }
+  .cena__luz { opacity: 1 !important; }
+  .cena__racha, .hero__flash, .hero__brasas { display: none; }
+  .cena__feixe { display: none; }
+  .hero__inner { animation: none !important; }
   .brasas, .sparks, .hero__cacos, .selo__clarao, .selo__onda { display: none; }
 }
