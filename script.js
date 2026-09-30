@@ -27,6 +27,13 @@
          aparecem como encerrados; o cartão "Comum" mostra o preço e o link
          DESTE lote.
        · preco: texto pronto, do jeito que deve aparecer ("R$ 49,90").
+       · parcelas / parcela (opcionais): quando existem, a PARCELA vira o número
+         grande do cartão e o à vista desce para a linha de baixo. Copie do
+         checkout. ⚠️ 12x R$ 17,42 = R$ 209,04 > R$ 167,00 à vista: há juros,
+         então a página NUNCA pode dizer "sem juros".
+       · precoDe / off (opcionais): o "de R$ X" riscado e o desconto — os
+         MESMOS números do checkout, senão a página contradiz a tela de
+         pagamento no momento em que a pessoa vai digitar o cartão.
          Vazio = "Em breve" — ou "Vendas abertas", se o link já existir.
        · checkout: link do produto. Vazio = o botão mostra o aviso
          "vendas abrem em breve" em vez de navegar.
@@ -37,11 +44,12 @@
     ingressos: {
       loteAtual: 1,
       lotes: [
-        { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },   // 1º lote
+        { preco: "R$ 35,00", precoDe: "R$ 56,00", off: "-38%",               // 1º lote
+          checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },
         { preco: "", checkout: "" },   // 2º lote
         { preco: "", checkout: "" }    // 3º lote
       ],
-      vip: { preco: "", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" },
+      vip: { preco: "R$ 167,00", parcelas: "12x", parcela: "R$ 17,42", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" },
 
       /* ─── ESCASSEZ ───
          capacidade: lugares do Teatro Difusora (aprox.).
@@ -110,11 +118,39 @@
     $$("[data-ingresso-lote]").forEach(function (el) { el.textContent = n + "º lote"; });
     $$("[data-ingresso-label]").forEach(function (el) { el.textContent = "Ingresso no " + n + "º lote"; });
 
+    /* Com parcela: "12x" pequeno + a parcela grande, e o à vista na linha
+       de baixo (data-ingresso-avista). Sem parcela: o preço cheio, grande. */
     function escrevePreco(el, dados) {
-      el.textContent = semPreco(dados);
+      var tipo = el.getAttribute("data-ingresso-preco");
+      var avista = $('[data-ingresso-avista="' + tipo + '"]');
+      var parcelado = !!(dados.parcela && dados.preco);
+
+      el.textContent = "";
+      if (parcelado) {
+        var x = document.createElement("small");
+        x.textContent = (dados.parcelas || "12x") + " de";
+        el.appendChild(x);
+        el.appendChild(document.createTextNode(" " + dados.parcela));
+      } else {
+        el.textContent = semPreco(dados);
+      }
       el.classList.toggle("is-vazio", !dados.preco);
+      el.classList.toggle("is-parcela", parcelado);
+
+      if (avista) {
+        avista.hidden = !parcelado;
+        if (parcelado) $("strong", avista).textContent = dados.preco;
+      }
     }
     $$('[data-ingresso-preco="comum"]').forEach(function (el) { escrevePreco(el, lote); });
+    $$("[data-ingresso-de]").forEach(function (el) {
+      el.hidden = !lote.precoDe;
+      if (!lote.precoDe) return;
+      $("s", el).textContent = lote.precoDe;
+      var off = $("em", el);
+      off.textContent = lote.off || "";
+      off.hidden = !lote.off;
+    });
     $$('[data-ingresso-preco="vip"]').forEach(function (el) { escrevePreco(el, ING.vip); });
 
     $$("[data-compra]").forEach(function (btn) {

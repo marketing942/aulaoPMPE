@@ -96,7 +96,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           tranco forte, clarão e faíscas (script.js);
        2. o brasão da PMPE despenca por cima do leão e quebra de novo —
           rachadura menor, tranco leve, ondas de choque e faíscas;
-       3. o leão recua e fica como relevo escuro atrás do medalhão;
+       3. o leão é empurrado para trás e some — só o brasão fica;
        4. o carimbo "EDITAL PUBLICADO" bate por cima: é o gancho da página.
      O resto da hero entra em cascata DEPOIS da batida.
      ========================================================= -->
@@ -360,8 +360,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <span class="eyebrow">Edital publicado · a corrida começou</span>
       <h2 class="section__title" id="ing-title">Cerca de 400 lugares. <span class="gold">Escolha o seu.</span></h2>
       <p class="section__lead">
-        São três lotes de ingresso comum — o valor sobe a cada virada — e um lote
-        único de <strong>VIP</strong>, que já vem com a Camisa oficial e a Dog Tag especial.
+        O <strong>VIP</strong> é lote único: <strong>primeiras fileiras garantidas</strong>, Camisa oficial
+        e Dog Tag especial já inclusas. O comum vem em três lotes — o valor sobe a cada virada.
       </p>
     </div>
 
@@ -410,6 +410,41 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </ol>
 
     <div class="planos">
+      <!-- ---------- VIP ----------
+           PRIMEIRO de propósito: é o maior ticket, e é o que a pessoa lê antes
+           de chegar ao comum — à esquerda no desktop, no topo no celular.
+           O invólucro existe só para o brilho vermelho: o clip-path do cartão
+           cortaria qualquer sombra externa desenhada nele mesmo. -->
+      <div class="plano-vip">
+      <article class="plano plano--vip">
+        <i class="plano__brasao" aria-hidden="true"></i>
+        <span class="plano__selo"><i aria-hidden="true"></i>Mais completo</span>
+        <header class="plano__head">
+          <span class="plano__tag">Lote único · vagas limitadas</span>
+          <h3 class="plano__nome">Ingresso VIP</h3>
+          <p class="plano__desc">Tudo do comum, nas primeiras fileiras, com a Camisa oficial e a Dog Tag especial já inclusas.</p>
+        </header>
+        <ul class="plano__lista">
+          <li class="plano__tudo">Tudo do Ingresso Comum</li>
+          <li class="plano__destaque"><b>Primeiras fileiras garantidas</b> no Teatro Difusora</li>
+          <li><b>Camisa oficial</b> do Aulão PMPE inclusa</li>
+          <li class="plano__vipitem">Dog Tag especial dupla garantida</li>
+        </ul>
+        <div class="plano__rodape">
+          <div class="plano__preco">
+            <span class="plano__preco-label">Ingresso VIP · lote único</span>
+            <b data-ingresso-preco="vip">Em breve</b>
+            <!-- o à vista vem EMBAIXO, pequeno: o número grande é a parcela -->
+            <span class="plano__avista" data-ingresso-avista="vip" hidden>no cartão · ou <strong></strong> à vista</span>
+            <span class="plano__preco-nota">Um lote só — não repete</span>
+          </div>
+          <a class="btn btn--gold btn--lg btn--block shine" data-compra="vip" href="#ingressos">
+            <span>Quero o VIP</span>
+          </a>
+        </div>
+      </article>
+      </div>
+
       <!-- ---------- COMUM ---------- -->
       <article class="plano">
         <header class="plano__head">
@@ -428,7 +463,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="plano__rodape">
           <div class="plano__preco">
             <span class="plano__preco-label" data-ingresso-label>Ingresso no 1º lote</span>
+            <!-- "de R$ X" riscado + desconto: só aparece se o lote tiver precoDe no CONFIG -->
+            <span class="plano__de" data-ingresso-de hidden>de <s></s> <em></em></span>
             <b data-ingresso-preco="comum">Em breve</b>
+            <span class="plano__avista" data-ingresso-avista="comum" hidden>no cartão · ou <strong></strong> à vista</span>
             <span class="plano__preco-nota">O valor sobe no próximo lote</span>
           </div>
           <a class="btn btn--ghost btn--lg btn--block" data-compra="comum" href="#ingressos">
@@ -437,31 +475,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </article>
 
-      <!-- ---------- VIP ---------- -->
-      <article class="plano plano--vip">
-        <i class="plano__brasao" aria-hidden="true"></i>
-        <span class="plano__selo">Mais completo</span>
-        <header class="plano__head">
-          <span class="plano__tag">Lote único · vagas limitadas</span>
-          <h3 class="plano__nome">Ingresso VIP</h3>
-          <p class="plano__desc">Tudo do comum, com a Camisa oficial e a Dog Tag especial já inclusas.</p>
-        </header>
-        <ul class="plano__lista">
-          <li class="plano__tudo">Tudo do Ingresso Comum</li>
-          <li><b>Camisa oficial</b> do Aulão PMPE inclusa</li>
-          <li class="plano__vipitem">Dog Tag especial dupla garantida</li>
-        </ul>
-        <div class="plano__rodape">
-          <div class="plano__preco">
-            <span class="plano__preco-label">Ingresso VIP · lote único</span>
-            <b data-ingresso-preco="vip">Em breve</b>
-            <span class="plano__preco-nota">Um lote só — não repete</span>
-          </div>
-          <a class="btn btn--gold btn--lg btn--block shine" data-compra="vip" href="#ingressos">
-            <span>Quero o VIP</span>
-          </a>
-        </div>
-      </article>
     </div>
 
     <!-- ─── CAMISA E DOG TAG ───
@@ -559,9 +572,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <details class="faq__item">
         <summary>Qual a diferença entre o ingresso comum e o VIP?</summary>
         <p>
-          Os dois dão acesso ao <strong>aulão completo</strong>. O VIP já vem com a
-          <strong>Camisa oficial</strong> e a <strong>Dog Tag especial dupla</strong> inclusas, e tem
-          lote único — quando acaba, não abre outro. O comum é vendido em <strong>três lotes</strong>,
+          Os dois dão acesso ao <strong>aulão completo</strong>. O VIP garante lugar nas
+          <strong>primeiras fileiras</strong> do teatro e já vem com a <strong>Camisa oficial</strong> e a
+          <strong>Dog Tag especial dupla</strong> inclusas. Ele tem lote único — quando acaba, não abre outro. O comum é vendido em <strong>três lotes</strong>,
           e o valor sobe a cada virada.
         </p>
       </details>
