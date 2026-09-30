@@ -92,11 +92,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      HERO
      ---------------------------------------------------------
      A entrada é uma cena em quatro tempos (tempos em --impacto, styles.css):
-       1. um feixe de luz desce e marca onde o brasão vai cair;
-       2. o brasão despenca com borrão de velocidade e BATE — tranco na tela,
-          clarão, três ondas hexagonais e a chuva de faíscas (script.js);
-       3. a luz de palco acende sobre o medalhão e a tela fica rachada
-          no ponto da batida;
+       1. o leão do CPPEM rompe a tela pelo centro — rachadura grande,
+          tranco forte, clarão e faíscas (script.js);
+       2. o brasão da PMPE despenca por cima do leão e quebra de novo —
+          rachadura menor, tranco leve, ondas de choque e faíscas;
+       3. o leão recua e fica como relevo escuro atrás do medalhão;
        4. o carimbo "EDITAL PUBLICADO" bate por cima: é o gancho da página.
      O resto da hero entra em cascata DEPOIS da batida.
      ========================================================= -->
@@ -123,9 +123,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </h1>
 
     <div class="cena" id="cenaHero">
-      <i class="cena__feixe" aria-hidden="true"></i>
-      <i class="cena__luz" aria-hidden="true"></i>
-      <!-- a tela rachada: linhas de vidro partindo do ponto da batida -->
+      <!-- 1ª quebra: o leão do CPPEM rompe a tela pelo centro -->
+      <span class="cena__leao" aria-hidden="true"><img src="public/emblema-leao.webp" alt="" width="400" height="465"></span>
       <svg class="cena__racha" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false">
         <g class="racha__raios">
           <path pathLength="1" d="M0 0 L14 -9 L22 -8 L35 -19 L52 -22 L70 -37 L96 -44"/>
@@ -146,6 +145,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <path pathLength="1" d="M63 13 L34 80"/>
           <path pathLength="1" d="M-60 8 L-40 70"/>
           <path pathLength="1" d="M-62 -58 L0 -64 L46 -66"/>
+        </g>
+      </svg>
+      <!-- 2ª quebra: o brasão da PMPE bate por cima do leão -->
+      <svg class="cena__racha cena__racha--2" viewBox="-100 -100 200 200" aria-hidden="true" focusable="false">
+        <g class="racha__raios">
+          <path pathLength="1" d="M0 0 L12 -6 L26 -14 L40 -12 L58 -28 L84 -34"/>
+          <path pathLength="1" d="M0 0 L10 10 L24 14 L34 30 L52 38 L70 60"/>
+          <path pathLength="1" d="M0 0 L-4 14 L-14 26 L-12 44 L-24 62 L-26 86"/>
+          <path pathLength="1" d="M0 0 L-14 -2 L-26 -12 L-44 -10 L-58 -24 L-86 -30"/>
+          <path pathLength="1" d="M0 0 L-2 -14 L6 -28 L2 -46 L10 -66 L6 -88"/>
+          <path pathLength="1" d="M0 0 L-12 8 L-30 12 L-44 26 L-66 30"/>
+        </g>
+        <g class="racha__aneis">
+          <path pathLength="1" d="M26 -14 L24 14 L-4 14"/>
+          <path pathLength="1" d="M-14 26 L-30 12 L-26 -12 L6 -28 L26 -14"/>
+          <path pathLength="1" d="M40 -12 L34 30"/>
         </g>
       </svg>
       <div class="selo selo--carimbo" id="seloHero">

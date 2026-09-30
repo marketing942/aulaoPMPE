@@ -554,52 +554,75 @@ strong, b { font-weight: 700; color: var(--text); }
 }
 
 /* =========================================================
-   A CENA DE ENTRADA — o brasão e o edital
+   A CENA DE ENTRADA — duas quebras
    ---------------------------------------------------------
-   Quatro tempos, todos amarrados a --impacto (o instante da
-   batida = atraso + duração da queda). Mudou um, muda o outro,
-   senão o clarão acende no vazio.
+   Dois instantes de batida, e tudo na cena está amarrado a um
+   deles. Mudou um tempo, confira os que dependem dele.
 
-     0 → impacto   o FEIXE desce e marca o ponto; o brasão despenca
-                   com borrão de velocidade (blur + brilho estourado)
-     impacto       o TRANCO sacode a hero; clarão, três ondas
-                   hexagonais e as faíscas (script.js, animationend)
-     + .1s         a LUZ DE PALCO acende (com a piscada de refletor) e
-                   a tela RACHA no ponto da batida, como vidro
-     + .55s        o carimbo EDITAL PUBLICADO bate por cima — é o gancho
+     --t1        o LEÃO do CPPEM rompe a tela pelo centro: vem do
+                 fundo em direção a quem assiste e estoura o vidro.
+                 Rachadura GRANDE, tranco forte, clarão, faíscas.
+     --impacto   o BRASÃO da PMPE despenca por cima do leão e quebra
+                 de novo: rachadura MENOR, tranco mais leve, ondas de
+                 choque e faíscas. O leão recua e vira relevo escuro
+                 atrás do medalhão.
+     + .55s      o carimbo EDITAL PUBLICADO bate por cima.
 
-   O que vem depois do medalhão (sub, CTA, relógio, ficha) só entra
-   depois da batida: a cena não pode competir com texto aparecendo.
+   --impacto = --cai-atraso + --cai-dur. O que vem depois do
+   medalhão (sub, CTA, relógio, ficha) só entra depois dele.
    ========================================================= */
-.hero { --cai-atraso: .42s; --cai-dur: .52s; --impacto: .94s; }
+.hero {
+  --t1: .82s;
+  --cai-atraso: 1.3s; --cai-dur: .5s; --impacto: 1.8s;
+}
 
 .cena {
   position: relative; width: clamp(220px, 34vw, 350px); aspect-ratio: 1;
   margin: clamp(22px, 4vh, 40px) auto 0;
 }
-.cena .selo { width: 100%; margin: 0; }
+.cena .selo { position: relative; z-index: 3; width: 100%; margin: 0; }
 
-/* ─── 1 · o feixe ─── */
-.cena__feixe {
-  position: absolute; left: 50%; bottom: 50%; z-index: 0;
-  width: 4px; height: 70vh; margin-left: -2px; pointer-events: none;
-  background: linear-gradient(180deg, transparent, rgba(240,220,176,.25) 40%, var(--gold-pale));
-  box-shadow: 0 0 22px 6px rgba(240,220,176,.35), 0 0 60px 18px var(--op-halo);
-  transform-origin: 50% 100%; opacity: 0;
-  animation: feixe var(--impacto) var(--ease) .05s both;
+/* ─── 1 · o leão rompe a tela ───
+   Nasce minúsculo e desfocado, lá no fundo, e acelera até PASSAR do
+   tamanho final — é o soco no vidro. Na batida do brasão ele é empurrado
+   para trás (leao-recua) e fica como relevo, a 22%. */
+.cena__leao {
+  position: absolute; left: 50%; top: 50%; z-index: 2; pointer-events: none;
+  width: 104%; transform: translate(-50%, -50%); opacity: 0;
+  filter: drop-shadow(0 0 28px rgba(175,146,86,.45));
+  animation:
+    leao-rompe .48s cubic-bezier(.6,0,.9,.4) calc(var(--t1) - .48s) both,
+    leao-assenta .4s var(--freada) var(--t1) forwards,
+    leao-recua .5s var(--ease) var(--impacto) forwards;
 }
-@keyframes feixe {
-  0%   { opacity: 0;   transform: scaleY(.15) scaleX(.4); }
-  40%  { opacity: .9;  transform: scaleY(1)   scaleX(1); }
-  90%  { opacity: 1;   transform: scaleY(1)   scaleX(1.6); }
-  100% { opacity: 0;   transform: scaleY(1.1) scaleX(9); }
+.cena__leao img { width: 100%; height: auto; }
+@keyframes leao-rompe {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.15); filter: blur(14px) brightness(.4); }
+  35%  { opacity: 1; }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1.22); filter: blur(0) brightness(1.5) drop-shadow(0 0 40px rgba(240,220,176,.7)); }
+}
+@keyframes leao-assenta {
+  0%   { transform: translate(-50%, -50%) scale(1.22); }
+  40%  { transform: translate(-50%, -50%) scale(.95); }
+  100% { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 28px rgba(175,146,86,.45)); }
+}
+@keyframes leao-recua {
+  0%   { opacity: 1;   transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: .22; transform: translate(-50%, -50%) scale(1.14); filter: grayscale(.4) brightness(.8); }
 }
 
-/* ─── 2 · a queda e a batida ─── */
+/* ─── 2 · o brasão despenca por cima ───
+   Entra VISÍVEL só depois do leão estar de pé: o `both` do cai segura o
+   medalhão invisível lá em cima durante toda a primeira quebra.
+
+   ⚠️ O quique usa `forwards`, e NUNCA `both`: as duas animações mexem no
+   mesmo transform, e a de baixo na lista vence. Com preenchimento para
+   trás, o quadro zero do quique (medalhão já no lugar) valeria durante a
+   queda inteira — o brasão não cairia, só apareceria. Mesma regra no leão. */
 .selo--carimbo {
   animation:
     carimbo-cai var(--cai-dur) cubic-bezier(.55,0,.9,.35) var(--cai-atraso) both,
-    carimbo-quica .55s var(--freada) var(--impacto) both;
+    carimbo-quica .55s var(--freada) var(--impacto) forwards;
 }
 @keyframes carimbo-cai {
   0%   { opacity: 0; transform: translateY(-62vh) rotate(-12deg) scale(2.2); filter: blur(12px) brightness(1.8); }
@@ -612,8 +635,16 @@ strong, b { font-weight: 700; color: var(--text); }
   60%  { transform: scale(1.03); }
   100% { transform: scale(1);    filter: brightness(1); }
 }
-/* o tranco: a hero inteira leva o baque, e não só o medalhão */
-.hero__inner { animation: tranco .6s var(--ease) var(--impacto) backwards; }
+
+/* ─── o tranco — duas vezes ───
+   Sem `backwards` de propósito: as duas animações mexem no mesmo transform,
+   e com preenchimento para trás a segunda congelaria a hero no quadro zero
+   dela durante toda a primeira quebra. */
+.hero__inner {
+  animation:
+    tranco .6s var(--ease) var(--t1),
+    tranco-leve .45s var(--ease) var(--impacto);
+}
 @keyframes tranco {
   0%   { transform: none; }
   8%   { transform: translate3d(-16px, 10px, 0) rotate(-.6deg); }
@@ -624,6 +655,14 @@ strong, b { font-weight: 700; color: var(--text); }
   78%  { transform: translate3d(2px, 1px, 0); }
   100% { transform: none; }
 }
+@keyframes tranco-leve {
+  0%   { transform: none; }
+  15%  { transform: translate3d(0, 9px, 0); }
+  35%  { transform: translate3d(-6px, -4px, 0); }
+  60%  { transform: translate3d(4px, 2px, 0); }
+  100% { transform: none; }
+}
+
 .selo__clarao {
   position: absolute; left: 50%; top: 50%; z-index: 3; pointer-events: none;
   width: 420%; aspect-ratio: 1; opacity: 0;
@@ -654,73 +693,53 @@ strong, b { font-weight: 700; color: var(--text); }
   100% { opacity: 0; transform: scale(2.3); }
 }
 
-/* ─── 3 · a luz de palco e a tela rachada ───
-   Sem raio de sol, sem estrela: é teatro e é polícia. A luz é um canhão
-   vindo de cima, em cone, que acende com a piscada de refletor ligando e
-   deixa uma poça de luz no chão. A rachadura é vidro partido a partir do
-   ponto da batida: aparece inteira no impacto e fica como cicatriz fraca. */
-.cena .selo { position: relative; z-index: 2; }
-.cena__luz {
-  position: absolute; left: 50%; bottom: 42%; z-index: 0; pointer-events: none;
-  width: 190%; height: 95vh; transform: translateX(-50%); opacity: 0;
-  /* termina em transparente: um corte seco aqui vira uma linha horizontal
-     atravessando o medalhão na altura da cintura */
-  background: linear-gradient(180deg, transparent 0%, rgba(240,220,176,.05) 35%, rgba(240,220,176,.15) 78%, transparent 100%);
-  clip-path: polygon(43% 0, 57% 0, 100% 100%, 0 100%);
-  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
-  animation: refletor 1s steps(1, end) calc(var(--impacto) + .1s) forwards;
-}
-/* a poça de luz no chão, embaixo do medalhão */
-.cena__luz::after {
-  content: ""; position: absolute; left: 50%; bottom: -34%; transform: translateX(-50%);
-  width: 70%; height: 30%;
-  background: radial-gradient(ellipse at 50% 50%, rgba(240,220,176,.2), transparent 70%);
-}
-@keyframes refletor {
-  0%   { opacity: .8; }
-  12%  { opacity: .15; }
-  22%  { opacity: 1; }
-  30%  { opacity: .35; }
-  42%  { opacity: 1; }
-  100% { opacity: 1; }
-}
+/* ─── as rachaduras ───
+   Vidro partido a partir do centro. A 1ª é a do leão (grande, tela
+   inteira); a 2ª é a do brasão (menor, girada, por cima da primeira).
+   As duas aparecem inteiras na batida e assentam como cicatriz fraca.
+   A máscara apaga as pontas antes do título e do texto. */
 .cena__racha {
   position: absolute; left: 50%; top: 50%; z-index: 1; pointer-events: none;
   width: 330%; height: 330%; transform: translate(-50%, -50%);
   overflow: visible; opacity: 0;
-  /* a máscara apaga as pontas: a rachadura é forte perto da batida e some
-     antes de chegar ao título e ao texto — ela não pode brigar com a leitura */
   mask-image: radial-gradient(circle, #000 18%, rgba(0,0,0,.6) 34%, transparent 58%);
   -webkit-mask-image: radial-gradient(circle, #000 18%, rgba(0,0,0,.6) 34%, transparent 58%);
-  animation: racha-some 2.2s var(--ease) var(--impacto) forwards;
+  animation: racha-some 2.4s var(--ease) var(--t1) forwards;
 }
 .cena__racha path {
   fill: none; stroke: #F0DCB0; stroke-width: .38; stroke-linejoin: bevel;
   stroke-dasharray: 1; stroke-dashoffset: 1;
   filter: drop-shadow(0 0 1.2px rgba(240,220,176,.9));
-  animation: racha-corre .22s cubic-bezier(.2,.8,.3,1) var(--impacto) forwards;
+  animation: racha-corre .22s cubic-bezier(.2,.8,.3,1) var(--t1) forwards;
 }
-.racha__aneis path { stroke-width: .26; stroke: rgba(240,220,176,.75); animation-delay: calc(var(--impacto) + .08s); }
+.cena__racha .racha__aneis path { stroke-width: .26; stroke: rgba(240,220,176,.75); animation-delay: calc(var(--t1) + .08s); }
+
+.cena__racha--2 {
+  width: 220%; height: 220%; transform: translate(-50%, -50%) rotate(24deg);
+  animation-delay: var(--impacto);
+}
+.cena__racha--2 path { stroke-width: .5; animation-delay: var(--impacto); }
+.cena__racha--2 .racha__aneis path { animation-delay: calc(var(--impacto) + .08s); }
+
 @keyframes racha-corre { to { stroke-dashoffset: 0; } }
-/* aparece inteira na batida e assenta como cicatriz — não some de vez */
 @keyframes racha-some {
   0%   { opacity: 1; }
   25%  { opacity: 1; }
   100% { opacity: .16; }
 }
-/* o estouro de luz da tela inteira, uma fração de segundo */
+
+/* o estouro de luz da tela inteira — um em cada batida */
 .hero__flash {
   position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0;
   background: radial-gradient(circle at 50% 55%, rgba(255,246,222,.55), rgba(255,231,176,.12) 40%, transparent 75%);
-  animation: tela-flash .45s var(--ease) var(--impacto) forwards;
+  animation:
+    tela-flash .45s var(--ease) var(--t1),
+    tela-flash-leve .35s var(--ease) var(--impacto);
 }
-@keyframes tela-flash {
-  0%   { opacity: 0; }
-  15%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-/* as brasas da hero: mais densas que as da página, e nascem no chão da cena */
+@keyframes tela-flash      { 0% { opacity: 0; } 15% { opacity: 1; }  100% { opacity: 0; } }
+@keyframes tela-flash-leve { 0% { opacity: 0; } 15% { opacity: .6; } 100% { opacity: 0; } }
+
+/* as brasas da hero: mais densas que as da página */
 .hero__brasas { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
 .hero__brasas .brasa { animation-name: brasa-hero; }
 @keyframes brasa-hero {
@@ -732,7 +751,7 @@ strong, b { font-weight: 700; color: var(--text); }
   100% { opacity: 0;              transform: translate3d(6px, -78vh, 0)    scale(.5); }
 }
 
-/* ─── 4 · o carimbo do edital ───
+/* ─── 3 · o carimbo do edital ───
    Chega grande e apagado e BATE inclinado sobre o canto do medalhão, como
    carimbo de papel. Fundo escuro e translúcido para ler por cima do brasão
    colorido; borda dupla em brasa, que é a cor do "agora" nesta página. */
@@ -764,7 +783,7 @@ strong, b { font-weight: 700; color: var(--text); }
   50%      { box-shadow: 0 0 44px 2px rgba(224,135,79,.8); }
 }
 
-/* o que vem depois do medalhão entra DEPOIS da batida */
+/* o que vem depois do medalhão entra DEPOIS da segunda batida */
 .hero .d4 { animation-delay: calc(var(--impacto) + .12s); }
 .hero .d5 { animation-delay: calc(var(--impacto) + .26s); }
 .hero__cacos { position: absolute; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
@@ -1679,9 +1698,8 @@ strong, b { font-weight: 700; color: var(--text); }
   .reveal, .anim, .selo--carimbo { opacity: 1 !important; transform: none !important; }
   .selo--carimbo { filter: none !important; }
   .edital { opacity: 1 !important; transform: rotate(-13deg) !important; }
-  .cena__luz { opacity: 1 !important; }
   .cena__racha, .hero__flash, .hero__brasas { display: none; }
-  .cena__feixe { display: none; }
+  .cena__leao { opacity: .22 !important; transform: translate(-50%, -50%) scale(1.14) !important; }
   .hero__inner { animation: none !important; }
   .brasas, .sparks, .hero__cacos, .selo__clarao, .selo__onda { display: none; }
 }

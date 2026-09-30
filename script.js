@@ -266,11 +266,26 @@
       return [re.left - rh.left + re.width / 2, re.top - rh.top + re.height / 2];
     }
 
-    /* a batida do brasão: a chuva grande */
+    /* 1ª quebra — o leão rompe a tela: a chuva grande */
+    var leao = document.querySelector(".cena__leao");
+    if (leao) {
+      leao.addEventListener("animationend", function (e) {
+        if (e.animationName !== "leao-rompe") return;
+        var c = centro(leao);
+        estilhacar(cacos, c[0], c[1], 70, 420);
+      });
+    }
+
+    /* 2ª quebra — o brasão bate por cima do leão. Contêiner próprio: as
+       faíscas da 1ª ainda podem estar voando, e estilhacar() limpa o alvo. */
+    var cacosB = document.createElement("div");
+    cacosB.className = "hero__cacos";
+    cacosB.setAttribute("aria-hidden", "true");
+    hero.appendChild(cacosB);
     selo.addEventListener("animationend", function (e) {
       if (e.animationName !== "carimbo-cai") return;
       var c = centro(selo);
-      estilhacar(cacos, c[0], c[1], 64, 380);
+      estilhacar(cacosB, c[0], c[1], 44, 300);
     });
 
     /* o carimbo do edital: um estouro curto, em brasa, no canto onde ele bate.
