@@ -1177,9 +1177,8 @@ strong, b { font-weight: 700; color: var(--text); }
    O CONTEÚDO — as matérias da prova
    ---------------------------------------------------------
    Só o nome da matéria e o ícone: sem tópico, sem horário, sem
-   ordem. É o que a página pode garantir hoje. O oitavo cartão
-   fecha a grade 4×2 dizendo que a divisão das aulas vem depois —
-   é aviso, não promessa, e por isso vai tracejado e apagado.
+   ordem. São oito matérias, que fecham a grade 4×2. O cronograma
+   das aulas não é divulgado, então a página não fala dele.
    ========================================================= */
 .materias { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 1100px; margin-inline: auto; }
 .materia {
@@ -1195,11 +1194,6 @@ strong, b { font-weight: 700; color: var(--text); }
   font-family: var(--font-title); font-size: 15.5px; font-weight: 800; line-height: 1.2;
   letter-spacing: .4px; text-transform: uppercase; color: var(--text);
 }
-.materia--nota { background: transparent; box-shadow: none; outline: 1px dashed var(--border); outline-offset: -1px; clip-path: none; }
-.materia--nota:hover { transform: none; box-shadow: none; }
-.materia--nota .tema__ico { opacity: .6; }
-.materia--nota b { color: var(--text-dim); font-size: 13.5px; }
-.materia--nota small { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.4; color: var(--text-mute); }
 
 /* o ícone num hexágono de ouro — aro no fundo, núcleo escuro por cima */
 .tema__ico {
@@ -1810,7 +1804,6 @@ strong, b { font-weight: 700; color: var(--text); }
   .materia b { font-size: 13px; }
   .materia .tema__ico { width: 40px; height: 45px; }
   .materia .tema__ico svg { width: 19px; height: 19px; }
-  .materia--nota { grid-column: 1 / -1; }
 
   .dock { display: flex; }
   .footer__bar { padding-bottom: 96px; }
