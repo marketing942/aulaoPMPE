@@ -42,11 +42,12 @@
        estão escritas direto no index.html — são valores fixos, não mudam
        por lote. No VIP as duas vêm inclusas. */
     ingressos: {
-      loteAtual: 1,
+      loteAtual: 2,
       lotes: [
-        { preco: "R$ 35,00", precoDe: "R$ 56,00", off: "-38%",               // 1º lote
+        { preco: "R$ 35,00", precoDe: "R$ 56,00", off: "-38%",               // 1º lote (encerrado)
+          checkout: "" },
+        { preco: "R$ 45,00",                                                 // 2º lote (aberto)
           checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },
-        { preco: "", checkout: "" },   // 2º lote
         { preco: "", checkout: "" }    // 3º lote
       ],
       vip: { preco: "R$ 167,00", parcelas: "12x", parcela: "R$ 17,42", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" },
@@ -178,6 +179,11 @@
       el.textContent = aberto ? n + "º lote aberto · 18/10" : "18/10 · Teatro Difusora";
     });
     $$("[data-urgencia-lote]").forEach(function (el) { el.textContent = n + "º lote"; });
+    /* a fita corrida também é texto fixo no HTML: sem isto ela ficaria
+       anunciando o 1º lote depois da virada */
+    $$("[data-fita-lote]").forEach(function (el) {
+      el.textContent = aberto ? n + "º lote aberto" : "Vendas em breve";
+    });
 
     var bloco = $("[data-restantes-bloco]");
     if (bloco) {
