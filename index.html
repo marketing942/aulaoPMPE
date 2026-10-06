@@ -509,6 +509,8 @@
                 <!-- "de R$ X" riscado + desconto: só aparece se o lote tiver precoDe no CONFIG -->
                 <span class="plano__de" data-ingresso-de hidden>de <s></s> <em></em></span>
                 <b data-ingresso-preco="comum">Em breve</b>
+                <!-- o que o lote pede além do valor (CONFIG: lotes[].extra) -->
+                <span class="plano__extra" data-ingresso-extra hidden></span>
                 <span class="plano__avista" data-ingresso-avista="comum" hidden>no cartão · ou <strong></strong> à
                   vista</span>
                 <span class="plano__preco-nota">O valor sobe no próximo lote</span>
@@ -597,6 +599,15 @@
               <strong>100 primeiras compras confirmadas do ingresso VIP</strong>, por ordem de compra.
               Esta página não tem contador e não sabe quantas já saíram; quem confirma é a equipe.
               Se as 100 já tiverem saído, o VIP continua com todo o resto: primeiras fileiras e Camisa oficial.
+            </p>
+          </details>
+          <!-- Só aparece quando o lote aberto tem `extra` no CONFIG.
+               ⚠️ Confirme com a equipe ONDE o alimento é entregue. -->
+          <details class="faq__item" data-faq-extra hidden>
+            <summary>O ingresso comum pede alimento além do valor?</summary>
+            <p>
+              Sim. Neste lote o ingresso comum é <strong data-faq-extra-txt>R$ 45,00 + 1 kg de alimento não
+                perecível</strong>. O pagamento é feito no checkout, e o alimento você leva no dia do aulão.
             </p>
           </details>
           <details class="faq__item">

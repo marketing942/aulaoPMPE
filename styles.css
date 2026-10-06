@@ -1605,6 +1605,22 @@ strong, b { font-weight: 700; color: var(--text); }
 .lotes__item--vip .lotes__n, .lotes__item--vip b { color: var(--vip-claro); }
 .lotes__item--vip .lotes__status { color: #fff; background: var(--vip); box-shadow: none; }
 
+/* ─── o que o lote pede além do valor ───
+   "+ 1 kg de alimento não perecível": faz parte do preço, então fica colado
+   nele, em corpo legível e com moldura — e não na nota miúda de baixo. */
+.plano__extra {
+  display: block; width: fit-content; margin: 10px auto 0; padding: 7px 14px;
+  font-family: var(--font-title); font-size: 14.5px; font-weight: 800;
+  letter-spacing: .6px; line-height: 1.3; color: var(--gold-pale);
+  background: rgba(175,146,86,.12); box-shadow: inset 0 0 0 1px var(--border-active);
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.lotes__extra {
+  font-size: 10.5px; font-weight: 700; letter-spacing: .8px; line-height: 1.3;
+  text-transform: uppercase; color: var(--gold-light); max-width: 16ch;
+}
+.lotes__item.is-encerrado .lotes__extra { color: var(--text-mute); }
+
 /* ─── a parcela como número grande ───
    "12x de" pequeno e apagado na frente, a parcela no corpo inteiro. O à
    vista desce para a linha de baixo, em corpo de texto: a primeira coisa

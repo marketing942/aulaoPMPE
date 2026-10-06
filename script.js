@@ -38,15 +38,20 @@
        · checkout: link do produto. Vazio = o botão mostra o aviso
          "vendas abrem em breve" em vez de navegar.
 
-       Camisa (+R$ 69,90) e Dog Tag comum (+R$ 20,00) do ingresso comum
-       estão escritas direto no index.html — são valores fixos, não mudam
-       por lote. No VIP as duas vêm inclusas. */
+       · extra (opcional): o que o lote pede ALÉM do valor — ex.: "+ 1 kg de
+         alimento não perecível". Aparece colado ao preço no cartão do
+         comum, na trilha de lotes, no aviso da hero e numa pergunta do FAQ.
+         Lote sem `extra` não mostra nada disso.
+
+       A Camisa (+R$ 69,90) do ingresso comum está escrita direto no
+       index.html — é valor fixo, não muda por lote. No VIP ela vem inclusa.
+       A Dog Tag não é vendida: só brinde dos 100 primeiros VIPs. */
     ingressos: {
       loteAtual: 2,
       lotes: [
         { preco: "R$ 35,00", precoDe: "R$ 56,00", off: "-38%",               // 1º lote (encerrado)
           checkout: "" },
-        { preco: "R$ 45,00",                                                 // 2º lote (aberto)
+        { preco: "R$ 45,00", extra: "+ 1 kg de alimento não perecível",      // 2º lote (aberto)
           checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },
         { preco: "", checkout: "" }    // 3º lote
       ],
@@ -152,6 +157,33 @@
       off.textContent = lote.off || "";
       off.hidden = !lote.off;
     });
+
+    /* O que o lote pede além do valor ("+ 1 kg de alimento não perecível").
+       Faz parte do PREÇO: fica colado nele, e não numa nota de rodapé —
+       ninguém pode descobrir isso só na porta do teatro. */
+    $$("[data-ingresso-extra]").forEach(function (el) {
+      el.hidden = !lote.extra;
+      el.textContent = lote.extra || "";
+    });
+    $$("[data-faq-extra]").forEach(function (el) {
+      el.hidden = !lote.extra;
+      var alvo = $("[data-faq-extra-txt]", el);
+      if (alvo && lote.extra) alvo.textContent = lote.preco + " " + lote.extra;
+    });
+    /* na trilha, cada lote mostra o próprio extra embaixo do preço */
+    $$(".lotes__item").forEach(function (li) {
+      var i = parseInt(li.getAttribute("data-lote"), 10);
+      var dados = ING.lotes[i - 1];
+      var tag = $(".lotes__extra", li);
+      if (!dados || !dados.extra) { if (tag) tag.remove(); return; }
+      if (!tag) {
+        tag = document.createElement("span");
+        tag.className = "lotes__extra";
+        var preco = $("[data-lote-preco]", li);
+        preco.parentNode.insertBefore(tag, preco.nextSibling);
+      }
+      tag.textContent = dados.extra;
+    });
     $$('[data-ingresso-preco="vip"]').forEach(function (el) { escrevePreco(el, ING.vip); });
 
     $$("[data-compra]").forEach(function (btn) {
@@ -172,7 +204,9 @@
 
     $$("[data-urgencia]").forEach(function (el) {
       el.textContent = aberto
-        ? n + "º lote aberto" + (n === 1 ? " — o mais barato de todos" : "") + ". O valor sobe na virada" + sufixo + "."
+        ? n + "º lote aberto" + (n === 1 ? " — o mais barato de todos" : "") +
+          (lote.extra && lote.preco ? ": " + lote.preco + " " + lote.extra : "") +
+          ". O valor sobe na virada" + sufixo + "."
         : "Vendas abrem em breve — o 1º lote é o mais barato de todos.";
     });
     $$("[data-urgencia-curta]").forEach(function (el) {
