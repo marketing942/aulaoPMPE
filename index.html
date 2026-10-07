@@ -524,12 +524,10 @@
         </div>
 
         <!-- ─── A CAMISA OFICIAL ───
+         Vitrine: a arte grande (frente e costas) e o texto ao lado. A foto vende
+         o item — por isso ela ocupa a maior coluna e vem primeiro no celular.
          A Dog Tag NÃO aparece aqui: ela não é vendida — só sai de brinde para
-         os 100 primeiros VIPs (ver o cartão do VIP).
-         ⚠️ Sem foto ainda: as artes abaixo são ilustrações em SVG. Quando as
-         imagem chegar, troque o <svg> por
-         <img src="public/NOME.webp" alt="..." width="..." height="..." loading="lazy">
-         dentro do mesmo <figure class="adicional__arte">. -->
+         os 100 primeiros VIPs (ver o cartão do VIP). -->
         <div class="adicionais">
           <div class="adicionais__head">
             <span class="eyebrow">Camisa oficial</span>
@@ -537,30 +535,25 @@
             <p>Inclusa no VIP. Com o ingresso comum, você leva por + R$ 69,90.</p>
           </div>
 
-          <div class="adicionais__grid adicionais__grid--um">
-            <article class="adicional">
-              <figure class="adicional__arte">
-                <svg viewBox="0 0 220 170" role="img" aria-label="Ilustração da Camisa oficial do Aulão PMPE">
-                  <path class="adicional__camisa"
-                    d="M78 14 L96 8 Q110 24 124 8 L142 14 L184 44 L164 72 L150 62 L150 162 L70 162 L70 62 L56 72 L36 44 Z" />
-                  <path d="M96 8 Q110 24 124 8" fill="none" stroke="#AF9256" stroke-width="2" />
-                  <image href="public/emblema-leao.webp" x="92" y="52" width="36" height="42" opacity=".95" />
-                  <text x="110" y="116" text-anchor="middle" class="adicional__grav adicional__grav--claro">AULÃO</text>
-                  <text x="110" y="136" text-anchor="middle" class="adicional__grav adicional__grav--g">PMPE</text>
-                </svg>
-              </figure>
-              <div class="adicional__txt">
-                <h4>Camisa oficial</h4>
-                <p>Preta com detalhes em ouro e o leão do CPPEM no peito — a farda do aulão.</p>
-                <ul class="adicional__opcoes">
-                  <li><span>No VIP</span><b class="adicional__inclusa">Inclusa</b></li>
-                  <li><span>Com o comum</span><b>+ R$ 69,90</b></li>
-                </ul>
-              </div>
-            </article>
-          </div>
-
-          <p class="adicionais__nota">Imagem ilustrativa — a foto oficial da Camisa chega em breve.</p>
+          <article class="camisa">
+            <figure class="camisa__foto">
+              <img src="public/camisa-aulao.webp"
+                alt="Camisa oficial do aulão, frente e costas: preta com detalhes em ouro, o leão do CPPEM no peito, a bandeira de Pernambuco na manga e, nas costas, a frase “O fácil não nos convém; o difícil nos fortalece” sobre os brasões das polícias de Pernambuco"
+                width="1200" height="900" loading="lazy">
+            </figure>
+            <div class="camisa__txt">
+              <h4>Camisa oficial</h4>
+              <p>
+                Preta com detalhes em ouro, o leão do CPPEM no peito e a bandeira de Pernambuco na manga.
+                Nas costas: <em>“O fácil não nos convém; o difícil nos fortalece.”</em>
+              </p>
+              <ul class="adicional__opcoes">
+                <li><span>No VIP</span><b class="adicional__inclusa">Inclusa</b></li>
+                <li><span>Com o comum</span><b>+ R$ 69,90</b></li>
+              </ul>
+              <a class="btn btn--gold shine camisa__cta" data-cta href="#ingressos"><span>Quero o VIP com a camisa</span></a>
+            </div>
+          </article>
         </div>
       </div>
     </section>

@@ -418,7 +418,7 @@
   /* ─── reveal ao rolar ─── */
   var alvos = $$(
     ".section__head, .pilar, .materia, .info, " +
-    ".lotes, .plano, .adicional, .faq__item, .final__inner"
+    ".lotes, .plano, .camisa, .faq__item, .final__inner"
   );
   alvos.forEach(function (el) { el.classList.add("reveal"); });
 
