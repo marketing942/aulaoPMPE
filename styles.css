@@ -68,7 +68,7 @@
 /* ─── BASE ─────────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--nav-h) + 16px);
+  scroll-padding-top: calc(var(--nav-h) + 16px + 38px);
   -webkit-text-size-adjust: 100%;
 }
 body {
@@ -1659,6 +1659,82 @@ strong, b { font-weight: 700; color: var(--text); }
   color: #1a0d02; background: linear-gradient(168deg, var(--ultimo-claro), var(--ultimo));
 }
 
+/* ─── o botão do comum no último lote ───
+   Deixa de ser contorno e vira botão cheio, em brasa: é a última chance do
+   ingresso comum, e um botão apagado ao lado do VIP dourado não diz isso. */
+.is-ultimo-lote .plano:not(.plano--vip) .btn {
+  position: relative; overflow: hidden;
+  color: #1a0d02; box-shadow: none;
+  background: linear-gradient(168deg, #FFD3A1 0%, var(--ultimo-claro) 22%, var(--ultimo) 58%, #B8591A 100%);
+  filter: drop-shadow(0 10px 24px rgba(240,138,60,.42));
+  height: 66px; font-size: 15.5px;
+}
+.is-ultimo-lote .plano:not(.plano--vip) .btn::before {
+  content: ""; position: absolute; inset: 1px; z-index: 1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255,255,255,.4), transparent 45%);
+  clip-path: inherit;
+}
+/* a mesma varredura de luz dos botões dourados */
+.is-ultimo-lote .plano:not(.plano--vip) .btn::after {
+  content: ""; position: absolute; top: -60%; left: 0; z-index: 3; pointer-events: none;
+  width: 42%; height: 220%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.12) 35%,
+    rgba(255,255,255,.6) 50%, rgba(255,255,255,.12) 65%, transparent 100%);
+  animation: shine-sweep 3.8s var(--ease) infinite;
+}
+.is-ultimo-lote .plano:not(.plano--vip) .btn:hover {
+  color: #1a0d02; transform: translateY(-2px);
+  background: linear-gradient(168deg, #FFE0BC 0%, var(--ultimo-claro) 30%, var(--ultimo) 70%, #C9631F 100%);
+  filter: drop-shadow(0 16px 32px rgba(240,138,60,.6)) brightness(1.05);
+}
+
+/* =========================================================
+   A FAIXA DE ALERTA — presa embaixo do header
+   ---------------------------------------------------------
+   Mora DENTRO do <header> (top: 100%), então acompanha a
+   rolagem e a mudança de altura dele sem precisar de conta.
+   Pisca devagar (brilho, não liga-desliga): chama o olho sem
+   virar alarme. No último lote ela é brasa; antes disso, ouro.
+   ========================================================= */
+.alerta {
+  position: absolute; left: 0; right: 0; top: 100%;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  height: 36px; padding: 0 14px; overflow: hidden;
+  font-family: var(--font-title); font-size: 12.5px; font-weight: 800;
+  letter-spacing: 2.6px; text-transform: uppercase; color: #0B0A08; white-space: nowrap;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold) 28%, var(--gold-pale) 50%, var(--gold) 72%, var(--gold-dark));
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,.9);
+  animation: alerta-respira 1.8s var(--ease) infinite;
+}
+.is-ultimo-lote .alerta {
+  color: #1a0d02;
+  background: linear-gradient(90deg, #8A3F10, var(--ultimo) 26%, #FFD3A1 50%, var(--ultimo) 74%, #8A3F10);
+  box-shadow: 0 10px 34px -10px rgba(240,138,60,.7);
+}
+@keyframes alerta-respira {
+  0%, 100% { filter: brightness(.9); }
+  50%      { filter: brightness(1.14); }
+}
+/* a luz que varre a faixa */
+.alerta::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 26%; pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: shine-sweep 3.4s var(--ease) infinite;
+}
+.alerta > i {
+  flex-shrink: 0; width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+  animation: ultimo-ponto 1s var(--ease) infinite;
+}
+.alerta b { color: inherit; font-weight: 800; transition: opacity .2s var(--ease), transform .2s var(--ease); }
+.alerta b.is-trocando { opacity: 0; transform: translateY(-6px); }
+.alerta__ir {
+  padding-left: 12px; border-left: 1px solid rgba(0,0,0,.3);
+  font-size: 11px; letter-spacing: 2px; opacity: .8;
+}
+.alerta:hover .alerta__ir { opacity: 1; }
+/* a hero abre espaço para a faixa não encostar na primeira linha */
+.tem-alerta .hero { padding-top: calc(var(--nav-h) + 46px + 30px); }
+
 /* ─── o que o lote pede além do valor ───
    "+ 1 kg de alimento não perecível": faz parte do preço, então fica colado
    nele, em corpo legível e com moldura — e não na nota miúda de baixo. */
@@ -1841,6 +1917,9 @@ strong, b { font-weight: 700; color: var(--text); }
   .opsel b { font-size: 12px; letter-spacing: 1.4px; }
 
   .hero { min-height: auto; padding-top: calc(var(--nav-h) + 28px); padding-bottom: 58px; }
+  .tem-alerta .hero { padding-top: calc(var(--nav-h) + 28px + 38px); }
+  .alerta { height: 34px; font-size: 11.5px; letter-spacing: 2px; }
+  .alerta__ir { display: none; }
   .hero__bg i { opacity: .22; }
   .hero__cta { flex-direction: column; }
   .hero__cta .btn { width: 100%; }

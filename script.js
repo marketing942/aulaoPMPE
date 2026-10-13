@@ -208,6 +208,36 @@
   /* ─── a escassez ───
      Três frases, todas verdadeiras por construção: saem do lote que está
      de fato aberto e, se houver, do número de lugares que a equipe passou. */
+  /* ─── a faixa de alerta ───
+     Troca a mensagem a cada 2,8s, com um apagar-e-acender curto. A classe
+     tem-alerta no <html> é o que abre espaço para a faixa na hero. */
+  var alertaTimer = null;
+
+  function ligarAlerta(mensagens) {
+    var faixa = $("[data-alerta]");
+    var txt = faixa && $("[data-alerta-txt]", faixa);
+    clearInterval(alertaTimer);
+    if (!faixa || !txt) return;
+
+    var tem = mensagens.length > 0;
+    faixa.hidden = !tem;
+    document.documentElement.classList.toggle("tem-alerta", tem);
+    if (!tem) return;
+
+    var i = 0;
+    txt.textContent = mensagens[0];
+    if (reduced || mensagens.length < 2) return;   /* sem rodízio: fica a principal */
+
+    alertaTimer = setInterval(function () {
+      i = (i + 1) % mensagens.length;
+      txt.classList.add("is-trocando");
+      setTimeout(function () {
+        txt.textContent = mensagens[i];
+        txt.classList.remove("is-trocando");
+      }, 220);
+    }, 2800);
+  }
+
   function pintarUrgencia(n, lote) {
     var aberto = !!lote.checkout;
     var r = ING.restantes;
@@ -236,6 +266,15 @@
         ? "O ingresso comum está no " + n + "º e último lote — quando ele fechar, não abre outro."
         : "O " + n + "º lote está aberto agora — na virada, o valor sobe e não volta.";
     });
+    /* a faixa sob o header: só verdades do lote aberto, uma de cada vez */
+    var mensagens = !aberto ? [] : ultimo
+      ? ["Último lote aberto!", "Vagas limitadas",
+         lote.preco ? lote.preco + (lote.extra ? " " + lote.extra : "") : "Ingresso comum",
+         "Depois dele, não abre outro"]
+      : [n + "º lote aberto", "Vagas limitadas", "O valor sobe na virada"];
+    if (temR) mensagens.push("Restam " + r + " lugares");
+    ligarAlerta(mensagens);
+
     $$("[data-lead-comum]").forEach(function (el) {
       el.textContent = ultimo
         ? "O comum está no " + n + "º e último lote."
