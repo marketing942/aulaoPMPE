@@ -1605,6 +1605,60 @@ strong, b { font-weight: 700; color: var(--text); }
 .lotes__item--vip .lotes__n, .lotes__item--vip b { color: var(--vip-claro); }
 .lotes__item--vip .lotes__status { color: #fff; background: var(--vip); box-shadow: none; }
 
+/* =========================================================
+   ÚLTIMO LOTE
+   ---------------------------------------------------------
+   Liga sozinho quando o lote aberto é o último da lista (a
+   classe .is-ultimo-lote vai no <html>, pelo script.js).
+
+   A cor é a BRASA, e não o vermelho: vermelho nesta página é
+   do VIP, que continua sendo o cartão principal. O último lote
+   precisa gritar "está acabando" sem tomar o lugar dele.
+   · selo "Último lote" pulsando no canto do cartão do comum;
+   · aro em brasa respirando em volta do cartão;
+   · o lote aberto na trilha e a nota do preço na mesma cor.
+   ========================================================= */
+:root { --ultimo: #F08A3C; --ultimo-claro: #FFB36B; }
+
+.plano__selo--ultimo {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 18px 9px 26px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: 2.6px; color: #1a0d02;
+  background: linear-gradient(135deg, var(--ultimo-claro), var(--ultimo) 55%, #B8591A);
+  clip-path: polygon(16px 0, 100% 0, 100% 100%, 0 100%);
+  animation: selo-pulsa 1.6s var(--ease) infinite;
+}
+.plano__selo--ultimo i {
+  width: 7px; height: 7px; border-radius: 50%; background: #1a0d02;
+  animation: ultimo-ponto 1.2s var(--ease) infinite;
+}
+@keyframes ultimo-ponto { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+
+.is-ultimo-lote .plano:not(.plano--vip) {
+  animation: ultimo-aro 1.8s var(--ease) infinite;
+}
+@keyframes ultimo-aro {
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(240,138,60,.45); }
+  50%      { box-shadow: inset 0 0 0 2px rgba(255,179,107,.95), inset 0 0 34px rgba(240,138,60,.16); }
+}
+.is-ultimo-lote .plano:not(.plano--vip) .plano__tag {
+  color: var(--ultimo-claro); background: rgba(240,138,60,.12);
+  box-shadow: inset 0 0 0 1px rgba(240,138,60,.6);
+}
+.is-ultimo-lote .plano:not(.plano--vip) .plano__preco { box-shadow: inset 0 0 0 1px rgba(240,138,60,.5); }
+.is-ultimo-lote .plano:not(.plano--vip) .plano__preco-nota {
+  color: var(--ultimo-claro); font-size: 12.5px; letter-spacing: 2px;
+  animation: ultimo-ponto 1.4s var(--ease) infinite;
+}
+/* na trilha: o lote aberto troca o ouro pela brasa */
+.is-ultimo-lote .lotes__item.is-atual { background: radial-gradient(240px 150px at 50% 0%, rgba(240,138,60,.3), transparent 72%); }
+.is-ultimo-lote .lotes__item.is-atual::before { background: linear-gradient(90deg, transparent, var(--ultimo-claro), transparent); box-shadow: 0 0 14px var(--ultimo); }
+.is-ultimo-lote .lotes__item.is-atual .lotes__n,
+.is-ultimo-lote .lotes__item.is-atual b { color: var(--ultimo-claro); }
+.is-ultimo-lote .lotes__item.is-atual .lotes__status {
+  color: #1a0d02; background: linear-gradient(168deg, var(--ultimo-claro), var(--ultimo));
+}
+
 /* ─── o que o lote pede além do valor ───
    "+ 1 kg de alimento não perecível": faz parte do preço, então fica colado
    nele, em corpo legível e com moldura — e não na nota miúda de baixo. */

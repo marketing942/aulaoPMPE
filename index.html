@@ -396,7 +396,7 @@
           <p class="section__lead">
             O <strong>VIP</strong> é lote único: <strong>primeiras fileiras garantidas</strong> e Camisa oficial
             inclusa — e os <strong>100 primeiros</strong> ainda levam a Dog Tag de brinde.
-            O comum vem em três lotes — o valor sobe a cada virada.
+            <span data-lead-comum>O comum vem em três lotes — o valor sobe a cada virada.</span>
           </p>
         </div>
 
@@ -408,8 +408,7 @@
           <span class="escassez__alerta"><i aria-hidden="true"></i> Lotou, lotou</span>
           <p class="escassez__txt">
             <b>O teatro não estica.</b> São cerca de 400 lugares para um edital que acabou de sair.
-            O <strong data-urgencia-lote>1º lote</strong> está aberto agora — na virada, o valor sobe e não
-            volta.
+            <span data-urgencia-frase>O 1º lote está aberto agora — na virada, o valor sobe e não volta.</span>
           </p>
           <div class="escassez__barra" data-restantes-bloco hidden>
             <div class="escassez__cab"><span>Lugares restantes</span><b data-restantes>—</b></div>
@@ -491,6 +490,8 @@
 
           <!-- ---------- COMUM ---------- -->
           <article class="plano">
+            <!-- só aparece quando o lote aberto é o último (script.js) -->
+            <span class="plano__selo plano__selo--ultimo" data-ultimo hidden><i aria-hidden="true"></i>Último lote</span>
             <header class="plano__head">
               <span class="plano__tag" data-ingresso-lote>1º lote</span>
               <h3 class="plano__nome">Ingresso Comum</h3>
@@ -513,7 +514,7 @@
                 <span class="plano__extra" data-ingresso-extra hidden></span>
                 <span class="plano__avista" data-ingresso-avista="comum" hidden>no cartão · ou <strong></strong> à
                   vista</span>
-                <span class="plano__preco-nota">O valor sobe no próximo lote</span>
+                <span class="plano__preco-nota" data-ingresso-nota>O valor sobe no próximo lote</span>
               </div>
               <a class="btn btn--ghost btn--lg btn--block" data-compra="comum" href="#ingressos">
                 <span>Quero o comum</span>

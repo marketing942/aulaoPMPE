@@ -47,13 +47,17 @@
        index.html — é valor fixo, não muda por lote. No VIP ela vem inclusa.
        A Dog Tag não é vendida: só brinde dos 100 primeiros VIPs. */
     ingressos: {
-      loteAtual: 2,
+      /* Quando loteAtual é o ÚLTIMO da lista, a página entra sozinha em modo
+         "último lote": troca os textos que falam em próxima virada (não há
+         mais nenhuma) e acende o destaque no cartão do comum. */
+      loteAtual: 3,
       lotes: [
         { preco: "R$ 35,00", precoDe: "R$ 56,00", off: "-38%",               // 1º lote (encerrado)
           checkout: "" },
-        { preco: "R$ 45,00", extra: "+ 1 kg de alimento não perecível",      // 2º lote (aberto)
-          checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" },
-        { preco: "", checkout: "" }    // 3º lote
+        { preco: "R$ 45,00", extra: "+ 1 kg de alimento não perecível",      // 2º lote (encerrado)
+          checkout: "" },
+        { preco: "R$ 55,00", extra: "+ 1 kg de alimento não perecível",      // 3º lote (aberto · ÚLTIMO)
+          checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-comum" }
       ],
       vip: { preco: "R$ 167,00", parcelas: "12x", parcela: "R$ 17,42", checkout: "https://checkout.cppem.com.br/pay/aulao-pmpe-pos-edital-ingresso-vip" },
 
@@ -116,12 +120,20 @@
       if (status) {
         status.textContent =
           i < n   ? "Encerrado" :
-          i === n ? (dados.checkout ? "Aberto agora" : "Abre em breve") :
+          i === n ? (dados.checkout ? (i === ING.lotes.length ? "Último lote · aberto" : "Aberto agora") : "Abre em breve") :
           i === 3 ? "Último comum" : "Próximo";
       }
     });
 
-    $$("[data-ingresso-lote]").forEach(function (el) { el.textContent = n + "º lote"; });
+    var ultimo = n === ING.lotes.length;
+    /* o <html> carrega o estado: é dele que o CSS tira o destaque do último lote */
+    document.documentElement.classList.toggle("is-ultimo-lote", ultimo);
+    $$("[data-ingresso-lote]").forEach(function (el) { el.textContent = n + "º" + (ultimo ? " e último" : "") + " lote"; });
+    $$("[data-ultimo]").forEach(function (el) { el.hidden = !ultimo; });
+    /* no último lote não existe "próximo lote" para o valor subir */
+    $$("[data-ingresso-nota]").forEach(function (el) {
+      el.textContent = ultimo ? "Último lote — não abre outro" : "O valor sobe no próximo lote";
+    });
     $$("[data-ingresso-label]").forEach(function (el) { el.textContent = "Ingresso no " + n + "º lote"; });
 
     /* Com parcela: "12x" pequeno + a parcela grande, e o à vista na linha
@@ -201,22 +213,38 @@
     var r = ING.restantes;
     var temR = typeof r === "number" && r >= 0;
     var sufixo = temR ? " · restam " + r + " lugares" : "";
+    var ultimo = n === ING.lotes.length;
+    var valor = lote.extra && lote.preco ? ": " + lote.preco + " " + lote.extra : "";
 
     $$("[data-urgencia]").forEach(function (el) {
-      el.textContent = aberto
-        ? n + "º lote aberto" + (n === 1 ? " — o mais barato de todos" : "") +
-          (lote.extra && lote.preco ? ": " + lote.preco + " " + lote.extra : "") +
-          ". O valor sobe na virada" + sufixo + "."
-        : "Vendas abrem em breve — o 1º lote é o mais barato de todos.";
+      /* No último lote a frase muda de natureza: não há mais virada de preço
+         para anunciar — o que acaba é o próprio ingresso comum. */
+      el.textContent = !aberto
+        ? "Vendas abrem em breve — o 1º lote é o mais barato de todos."
+        : ultimo
+          ? "Último lote aberto" + valor + ". Depois dele, não abre outro" + sufixo + "."
+          : n + "º lote aberto" + (n === 1 ? " — o mais barato de todos" : "") + valor +
+            ". O valor sobe na virada" + sufixo + ".";
     });
     $$("[data-urgencia-curta]").forEach(function (el) {
-      el.textContent = aberto ? n + "º lote aberto · 18/10" : "18/10 · Teatro Difusora";
+      el.textContent = !aberto ? "18/10 · Teatro Difusora" : ultimo ? "Último lote · 18/10" : n + "º lote aberto · 18/10";
     });
     $$("[data-urgencia-lote]").forEach(function (el) { el.textContent = n + "º lote"; });
+    /* as duas frases que falavam em "virada": no último lote elas seriam falsas */
+    $$("[data-urgencia-frase]").forEach(function (el) {
+      el.textContent = ultimo
+        ? "O ingresso comum está no " + n + "º e último lote — quando ele fechar, não abre outro."
+        : "O " + n + "º lote está aberto agora — na virada, o valor sobe e não volta.";
+    });
+    $$("[data-lead-comum]").forEach(function (el) {
+      el.textContent = ultimo
+        ? "O comum está no " + n + "º e último lote."
+        : "O comum vem em três lotes — o valor sobe a cada virada.";
+    });
     /* a fita corrida também é texto fixo no HTML: sem isto ela ficaria
        anunciando o 1º lote depois da virada */
     $$("[data-fita-lote]").forEach(function (el) {
-      el.textContent = aberto ? n + "º lote aberto" : "Vendas em breve";
+      el.textContent = !aberto ? "Vendas em breve" : ultimo ? "Último lote aberto" : n + "º lote aberto";
     });
 
     var bloco = $("[data-restantes-bloco]");
